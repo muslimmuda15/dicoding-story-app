@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/login"
-            android:textSize="@dimen/text_size_xxlarge"
+            android:textSize="@dimen/text_size_xlarge"
             android:textStyle="bold"
             android:textColor="@color/black"/>
 
@@ -30,6 +30,8 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:startIconDrawable="@drawable/ic_outline_email_24"
+            app:startIconContentDescription="@string/email"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox" >
 
             <com.google.android.material.textfield.TextInputEditText
@@ -42,13 +44,13 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:startIconDrawable="@drawable/ic_outline_lock_24"
+            app:startIconContentDescription="@string/password"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox" >
 
             <com.rachmad.training.dicodingstoryapp.helper.ui.CustomPasswordEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/white"
-                android:inputType="textPassword"
                 android:hint="@string/password" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -57,9 +59,18 @@
             android:layout_height="wrap_content"
             android:text="@string/login"
             android:backgroundTint="@color/md_blue_500"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_medium"
             android:layout_marginTop="@dimen/margin_padding_size_medium"
             style="@style/Widget.Material3.Button.ElevatedButton"/>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/signup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/margin_padding_size_xxlarge"
+        android:text="@string/sign_up_message" />
 </RelativeLayout>
