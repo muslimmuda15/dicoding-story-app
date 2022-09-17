@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FF000000</color>
+    <color name="black">#FFFFFFFF</color>
+
+    <!--brown -->
+    <color name="md_brown_900">#EFEBE9</color>
+    <color name="md_brown_800">#D7CCC8</color>
+    <color name="md_brown_700">#BCAAA4</color>
+    <color name="md_brown_600">#A1887F</color>
+    <color name="md_brown_500">#8D6E63</color>
+    <color name="md_brown_400">#795548</color>
+    <color name="md_brown_300">#6D4C41</color>
+    <color name="md_brown_200">#5D4037</color>
+    <color name="md_brown_100">#4E342E</color>
+    <color name="md_brown_50">#3E2723</color>
+
+    <!--grey-->
+    <color name="md_grey_900">#FAFAFA</color>
+    <color name="md_grey_800">#F5F5F5</color>
+    <color name="md_grey_700">#EEEEEE</color>
+    <color name="md_grey_600">#E0E0E0</color>
+    <color name="md_grey_500">#BDBDBD</color>
+    <color name="md_grey_400">#9E9E9E</color>
+    <color name="md_grey_300">#757575</color>
+    <color name="md_grey_200">#616161</color>
+    <color name="md_grey_100">#424242</color>
+    <color name="md_grey_50">#212121</color>
+    <color name="md_white_1000">#000000</color>
+    <color name="md_black_1000">#ffffff</color>
+
+    <!--blue grey-->
+    <color name="md_blue_grey_900">#ECEFF1</color>
+    <color name="md_blue_grey_800">#CFD8DC</color>
+    <color name="md_blue_grey_700">#B0BBC5</color>
+    <color name="md_blue_grey_600">#90A4AE</color>
+    <color name="md_blue_grey_500">#78909C</color>
+    <color name="md_blue_grey_400">#607D8B</color>
+    <color name="md_blue_grey_300">#546E7A</color>
+    <color name="md_blue_grey_200">#455A64</color>
+    <color name="md_blue_grey_100">#37474F</color>
+    <color name="md_blue_grey_50">#263238</color>
+</resources>
