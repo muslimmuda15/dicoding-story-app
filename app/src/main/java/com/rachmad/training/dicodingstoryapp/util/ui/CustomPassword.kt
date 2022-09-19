@@ -1,14 +1,12 @@
-package com.rachmad.training.dicodingstoryapp.helper.ui
+package com.rachmad.training.dicodingstoryapp.util.ui
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.text.InputType
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import com.rachmad.training.dicodingstoryapp.R
-import javax.inject.Inject
 
 class CustomPasswordEditText: AppCompatEditText {
     constructor(context: Context) : super(context) {
@@ -27,7 +25,7 @@ class CustomPasswordEditText: AppCompatEditText {
         super.onDraw(canvas)
         if(isFocused){
             if(text.toString().length < 6){
-                setError("Password must be at least 6 characters")
+                error = context.getString(R.string.password_min_message)
             }
         }
     }

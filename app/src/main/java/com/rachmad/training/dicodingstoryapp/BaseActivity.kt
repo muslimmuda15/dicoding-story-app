@@ -1,4 +1,4 @@
-package com.rachmad.training.dicodingstoryapp.di
+package com.rachmad.training.dicodingstoryapp
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

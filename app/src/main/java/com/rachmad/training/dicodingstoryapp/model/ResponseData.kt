@@ -1,4 +1,4 @@
-package com.rachmad.training.dicodingstoryapp.`object`
+package com.rachmad.training.dicodingstoryapp.model
 
 data class BaseResponseData(
     var error: Boolean?,
@@ -8,7 +8,7 @@ data class BaseResponseData(
 )
 
 data class LoginData(
-    var userId: String,
+    var userId: String?,
     var name: String?,
     var token: String?
 )

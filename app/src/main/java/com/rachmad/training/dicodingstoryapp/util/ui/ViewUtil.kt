@@ -1,4 +1,4 @@
-package com.rachmad.training.dicodingstoryapp.helper.ui
+package com.rachmad.training.dicodingstoryapp.util.ui
 
 import android.app.Activity
 import android.content.Context
@@ -8,6 +8,18 @@ import android.text.style.ClickableSpan
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+
+fun View.visible(){
+    visibility = View.VISIBLE
+}
+
+fun View.invisible(){
+    visibility = View.INVISIBLE
+}
+
+fun View.gone(){
+    visibility = View.GONE
+}
 
 fun TextView.createLinks(vararg links: Pair<String, View.OnClickListener>) {
     val spannableString = SpannableString(text)
@@ -31,7 +43,7 @@ fun TextView.createLinks(vararg links: Pair<String, View.OnClickListener>) {
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
     }
-    movementMethod = LinkMovementMethod.getInstance() // without LinkMovementMethod, link can not click
+    movementMethod = LinkMovementMethod.getInstance() // without LinkMovementMethod, link can not clicked
     setText(spannableString, TextView.BufferType.SPANNABLE)
 }
 

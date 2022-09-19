@@ -11,4 +11,11 @@
     <string name="full_name">Full name</string>
     <string name="confirm_password">Confirm password</string>
     <string name="create_account">Create Account</string>
+    <string name="empty_email">Fill the email</string>
+    <string name="email_not_valid">email not valid, try again</string>
+    <string name="empty_password">Fill the password</string>
+    <string name="unknown_error">Something went wrong</string>
+    <string name="password_min_message">Password must be at least 6 characters</string>
+    <string name="empty_name">Fill your full name</string>
+    <string name="password_not_match">Password not match</string>
 </resources>
