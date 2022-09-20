@@ -15,7 +15,6 @@ import com.rachmad.training.dicodingstoryapp.databinding.ActivityRegisterBinding
 import com.rachmad.training.dicodingstoryapp.BaseActivity
 import com.rachmad.training.dicodingstoryapp.model.LoginRequestData
 import com.rachmad.training.dicodingstoryapp.repository.UserPreference
-import com.rachmad.training.dicodingstoryapp.ui.MainActivity
 import com.rachmad.training.dicodingstoryapp.ui.login.LoginViewModel
 import com.rachmad.training.dicodingstoryapp.util.ViewModelFactory
 import com.rachmad.training.dicodingstoryapp.util.isValidEmail
@@ -26,7 +25,7 @@ import com.rachmad.training.dicodingstoryapp.util.ui.visible
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user")
 
 class RegisterActivity : BaseActivity<ActivityRegisterBinding>() {
-    private lateinit var viewModel: LoginViewModel
+    private lateinit var viewModel: RegisterViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +36,7 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>() {
     }
 
     private fun init(){
-        viewModel = ViewModelProvider(this, ViewModelFactory(UserPreference.getInstance(dataStore)))[LoginViewModel::class.java]
+        viewModel = ViewModelProvider(this, ViewModelFactory(UserPreference.getInstance(dataStore)))[RegisterViewModel::class.java]
     }
 
     private fun initView(){
@@ -65,7 +64,7 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>() {
 
                 if(email.isBlank()) {
                     emailLayout.error = getString(R.string.empty_email)
-                } else if(email.isValidEmail()){
+                } else if(!email.isValidEmail()){
                     emailLayout.error = getString(R.string.email_not_valid)
                 }
 
@@ -77,7 +76,7 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>() {
 
                 if(confirmPassword.isBlank()) {
                     confirmPasswordLayout.error = getString(R.string.empty_password)
-                } else if(confirmPassword == password){
+                } else if(confirmPassword != password){
                     confirmPasswordLayout.error = getString(R.string.password_not_match)
                 }
 

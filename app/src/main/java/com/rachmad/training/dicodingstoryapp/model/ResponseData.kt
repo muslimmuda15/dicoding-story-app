@@ -10,7 +10,7 @@ data class BaseResponseData(
 data class LoginData(
     var userId: String?,
     var name: String?,
-    var token: String?
+    var token: String?,
 )
 
 data class StoryData(

@@ -8,6 +8,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="force_black">#FF000000</color>
+    <color name="force_white">#FFFFFFFF</color>
+
+    <color name="transparent">#00000000</color>
+
     <color name="md_red_50">#FFEBEE</color>
     <color name="md_red_100">#FFCDD2</color>
     <color name="md_red_200">#EF9A9A</color>

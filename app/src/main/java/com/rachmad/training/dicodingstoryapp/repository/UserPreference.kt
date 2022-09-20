@@ -13,7 +13,7 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         LoginData(
             preferences[ID_KEY],
             preferences[NAME_KEY],
-            preferences[TOKEN_KEY]
+            preferences[TOKEN_KEY],
         )
     }
 

@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Aplikasi Story Dicoding</string>
+    <string name="email">Email</string>
+    <string name="password">sandi</string>
+    <string name="login">Masuk</string>
+    <string name="sign_in_description">Silahkan login terlebih dahulu</string>
+    <string name="sign_up_message">Belum punya akun? <b><font color="#2196F3">Daftar</font></b></string>
+    <string name="sign_up">Daftar</string>
+    <string name="sign_in_message">Sudah punya akun? <b><font color="#2196F3">Masuk</font></b></string>
+    <string name="sign_in">Masuk</string>
+    <string name="full_name">Nama lengkap</string>
+    <string name="confirm_password">Sandi lagi</string>
+    <string name="create_account">Buat Akun</string>
+    <string name="empty_email">Masukkan email</string>
+    <string name="email_not_valid">email tidak valid, coba lagi</string>
+    <string name="empty_password">Masukkan sandi</string>
+    <string name="unknown_error">Terjadi kesalahan</string>
+    <string name="password_min_message">Password setidaknya terdiri dari 6 karakter</string>
+    <string name="empty_name">Masukkan nama lengkap</string>
+    <string name="password_not_match">Sandi tidak sama</string>
+    <string name="account_image">gambar akun</string>
+    <string name="more">lainnya</string>
+    <string name="logout">keluar</string>
+    <string name="logout_description">Yakin mau keluar?</string>
+    <string name="language">bahasa</string>
+    <string name="english">inggris</string>
+    <string name="indonesia">indonesia</string>
+</resources>

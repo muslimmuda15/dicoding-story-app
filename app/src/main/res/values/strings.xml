@@ -18,4 +18,11 @@
     <string name="password_min_message">Password must be at least 6 characters</string>
     <string name="empty_name">Fill your full name</string>
     <string name="password_not_match">Password not match</string>
+    <string name="account_image">account image</string>
+    <string name="more">more</string>
+    <string name="logout">logout</string>
+    <string name="logout_description">Are you sure to logout?</string>
+    <string name="language">language</string>
+    <string name="english">english</string>
+    <string name="indonesia">indonesia</string>
 </resources>

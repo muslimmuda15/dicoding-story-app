@@ -31,6 +31,7 @@ interface EndPoint {
 
     @GET("stories")
     fun getAllStories(
+        @Header("Authorization") token: String,
         @Query("page") page: Int? = null,
         @Query("size") size: Int? = null,
         @Query("location") location: Int = 0,

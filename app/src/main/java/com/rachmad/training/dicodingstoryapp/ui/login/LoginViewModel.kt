@@ -19,5 +19,4 @@ class LoginViewModel(private val pref: UserPreference): ViewModel() {
     }
 
     fun login(user: LoginRequestData, success: (BaseResponseData?) -> Unit, error: (BaseResponseData?) -> Unit, failure: (Throwable?) -> Unit) = loginRepository.login(user, success, error, failure)
-    fun register(user: LoginRequestData, success: (BaseResponseData?) -> Unit, error: (BaseResponseData?) -> Unit, failure: (Throwable?) -> Unit) = loginRepository.register(user, success, error, failure)
 }
