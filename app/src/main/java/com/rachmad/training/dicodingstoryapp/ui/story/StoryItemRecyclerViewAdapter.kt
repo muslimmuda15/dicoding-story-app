@@ -1,5 +1,6 @@
 package com.rachmad.training.dicodingstoryapp.ui.story
 
+import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,12 +8,17 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
+import com.rachmad.training.dicodingstoryapp.R
 import com.rachmad.training.dicodingstoryapp.databinding.FragmentStoryItemBinding
 import com.rachmad.training.dicodingstoryapp.model.StoryData
-import com.rachmad.training.dicodingstoryapp.util.toDateLong
-import com.rachmad.training.dicodingstoryapp.util.toTime
+import com.rachmad.training.dicodingstoryapp.util.Geolocation
+import com.rachmad.training.dicodingstoryapp.util.TimeUtil
+import com.rachmad.training.dicodingstoryapp.util.ui.gone
+import com.rachmad.training.dicodingstoryapp.util.ui.visible
 
-class StoryItemRecyclerViewAdapter(private val listener: OnSelectedStory): RecyclerView.Adapter<StoryItemRecyclerViewAdapter.StoryViewHolder>() {
+class StoryItemRecyclerViewAdapter(val context: Context, private val listener: OnSelectedStory): RecyclerView.Adapter<StoryItemRecyclerViewAdapter.StoryViewHolder>() {
+    private var geolocation: Geolocation = Geolocation(context)
+    private var timeUtil: TimeUtil = TimeUtil(context)
 
     private val values = ArrayList<StoryData>()
 
@@ -40,14 +46,31 @@ class StoryItemRecyclerViewAdapter(private val listener: OnSelectedStory): Recyc
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         with(holder) {
             val item = values[position]
+
+            val timeStamp = item.createdAt?.let { timeUtil.toDateLong(it) } ?: run { 0L }
+
             fullName.text = item.name
-            date.text = item.createdAt?.toDateLong()?.toTime()
+            date.text = timeUtil.toTime(timeStamp)
             description.text = item.description
 
-            Glide.with(photo).load(item.photoUrl).into(photo)
+            try {
+                if (item.lat != null && item.lon != null) {
+                    location.visible()
+                    geolocation.setLocation(item.lat!!, item.lon!!)
+                    location.text = geolocation.city ?: geolocation.state ?: geolocation.country ?: context.getString(R.string.unknown_location)
+                } else {
+                    location.gone()
+                }
+            } catch (e: Exception){
+                location.gone()
+            }
+
+            Glide.with(photo)
+                .load(item.photoUrl)
+                .into(photo)
 
             mainContainer.setOnClickListener {
-                listener.onClick(item.id)
+                listener.onClick(item)
             }
         }
     }
@@ -60,6 +83,6 @@ class StoryItemRecyclerViewAdapter(private val listener: OnSelectedStory): Recyc
         val date: TextView = binding.date
         val description: TextView = binding.description
         val mainContainer: RelativeLayout = binding.mainContainer
+        val location: TextView = binding.location
     }
-
 }

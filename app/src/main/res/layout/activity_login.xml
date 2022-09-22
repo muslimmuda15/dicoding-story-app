@@ -35,13 +35,10 @@
             app:startIconContentDescription="@string/email"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox" >
 
-            <com.google.android.material.textfield.TextInputEditText
+            <com.rachmad.training.dicodingstoryapp.util.ui.CustomEmailEditText
                 android:id="@+id/email"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/white"
-                android:inputType="textEmailAddress"
-                android:hint="@string/email" />
+                android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -55,8 +52,7 @@
             <com.rachmad.training.dicodingstoryapp.util.ui.CustomPasswordEditText
                 android:id="@+id/password"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/password" />
+                android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button

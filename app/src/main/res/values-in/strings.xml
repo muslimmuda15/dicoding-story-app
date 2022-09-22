@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Aplikasi Story Dicoding</string>
     <string name="email">Email</string>
-    <string name="password">sandi</string>
+    <string name="password">Sandi</string>
     <string name="login">Masuk</string>
     <string name="sign_in_description">Silahkan login terlebih dahulu</string>
     <string name="sign_up_message">Belum punya akun? <b><font color="#2196F3">Daftar</font></b></string>
@@ -23,6 +23,22 @@
     <string name="logout">keluar</string>
     <string name="logout_description">Yakin mau keluar?</string>
     <string name="language">bahasa</string>
-    <string name="english">inggris</string>
-    <string name="indonesia">indonesia</string>
+    <string name="english">Inggris</string>
+    <string name="indonesia">Indonesia</string>
+    <string name="unknown_location">Lokasi tidak diketahui</string>
+    <string name="ago">yang lalu</string>
+    <string name="sec">detik</string>
+    <string name="one_sec">satu detik</string>
+    <string name="min">menit</string>
+    <string name="one_min">satu menit</string>
+    <string name="hour">jam</string>
+    <string name="one_hour">satu jam</string>
+    <string name="year">tahun</string>
+    <string name="one_year">satu tahun</string>
+    <string name="month">bulan</string>
+    <string name="one_month">satu bulan</string>
+    <string name="week">minggu</string>
+    <string name="one_week">satu minggu</string>
+    <string name="day">hari</string>
+    <string name="one_day">one day</string>
 </resources>

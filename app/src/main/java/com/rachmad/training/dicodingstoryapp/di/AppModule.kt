@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import com.rachmad.training.dicodingstoryapp.BuildConfig
+import com.rachmad.training.dicodingstoryapp.util.Geolocation
+import com.rachmad.training.dicodingstoryapp.util.TimeUtil
 import com.rachmad.training.dicodingstoryapp.webservice.EndPoint
 import com.rachmad.training.dicodingstoryapp.webservice.RetrofitBuilder
 import dagger.Module

@@ -4,6 +4,7 @@ import com.rachmad.training.dicodingstoryapp.repository.AuthRepository
 import com.rachmad.training.dicodingstoryapp.repository.StoryRepository
 import com.rachmad.training.dicodingstoryapp.ui.login.LoginActivity
 import com.rachmad.training.dicodingstoryapp.ui.story.MainActivity
+import com.rachmad.training.dicodingstoryapp.ui.story.StoryItemRecyclerViewAdapter
 import dagger.Component
 import javax.inject.Singleton
 

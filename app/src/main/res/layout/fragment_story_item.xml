@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="@dimen/margin_padding_size_default"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -21,21 +22,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:maxHeight="@dimen/image_min_height"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
                 android:contentDescription="@string/account_image" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/gradient_photo" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:paddingTop="@dimen/margin_padding_size_medium"
+                android:background="@drawable/gradient_photo"
                 android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_padding_size_medium"
+                    android:textColor="@color/force_white"
+                    app:drawableStartCompat="@drawable/ic_baseline_location_on_24"
+                    android:drawablePadding="@dimen/margin_padding_size_default"
+                    android:visibility="gone"
+                    tools:text="Location" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -44,7 +53,7 @@
 
                     <TextView
                         android:id="@+id/full_name"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginHorizontal="@dimen/margin_padding_size_medium"
@@ -60,10 +69,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/force_white"
-                        android:layout_alignParentEnd="true"
                         android:layout_marginHorizontal="@dimen/margin_padding_size_medium"
                         android:elevation="@dimen/margin_padding_size_xxlarge"
-                        android:layout_alignParentBottom="true"
                         tools:text="5 jam" />
                 </LinearLayout>
 

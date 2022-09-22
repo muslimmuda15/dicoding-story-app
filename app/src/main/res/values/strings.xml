@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Dicoding Story App</string>
     <string name="email">Email</string>
-    <string name="password">password</string>
+    <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="sign_in_description">Please sign in to continue</string>
     <string name="sign_up_message">Don\'t have an account? <b><font color="#2196F3">Sign up</font></b></string>
@@ -23,6 +23,22 @@
     <string name="logout">logout</string>
     <string name="logout_description">Are you sure to logout?</string>
     <string name="language">language</string>
-    <string name="english">english</string>
-    <string name="indonesia">indonesia</string>
+    <string name="english">English</string>
+    <string name="indonesia">Indonesia</string>
+    <string name="unknown_location">Unknown Location</string>
+    <string name="ago">ago</string>
+    <string name="sec">secs</string>
+    <string name="one_sec">one sec</string>
+    <string name="min">mins</string>
+    <string name="one_min">one min</string>
+    <string name="hour">hours</string>
+    <string name="one_hour">one hour</string>
+    <string name="year">years</string>
+    <string name="one_year">one year</string>
+    <string name="month">months</string>
+    <string name="one_month">one month</string>
+    <string name="week">weeks</string>
+    <string name="one_week">one week</string>
+    <string name="day">days</string>
+    <string name="one_day">one day</string>
 </resources>

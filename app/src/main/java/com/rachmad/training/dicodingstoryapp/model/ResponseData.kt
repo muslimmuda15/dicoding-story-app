@@ -1,5 +1,7 @@
 package com.rachmad.training.dicodingstoryapp.model
 
+import java.io.Serializable
+
 data class BaseResponseData(
     var error: Boolean?,
     var message: String?,
@@ -21,4 +23,4 @@ data class StoryData(
     var createdAt: String?,
     var lat: Double?,
     var lon: Double?
-)
+): Serializable

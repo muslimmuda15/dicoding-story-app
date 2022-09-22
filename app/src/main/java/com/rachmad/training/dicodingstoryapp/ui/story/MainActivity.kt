@@ -18,8 +18,10 @@ import com.rachmad.training.dicodingstoryapp.App
 import com.rachmad.training.dicodingstoryapp.BaseActivity
 import com.rachmad.training.dicodingstoryapp.R
 import com.rachmad.training.dicodingstoryapp.databinding.ActivityMainBinding
+import com.rachmad.training.dicodingstoryapp.model.StoryData
 import com.rachmad.training.dicodingstoryapp.repository.UserPreference
 import com.rachmad.training.dicodingstoryapp.ui.login.LoginActivity
+import com.rachmad.training.dicodingstoryapp.ui.story.detail.StoryDetailsActivity
 import com.rachmad.training.dicodingstoryapp.util.LocaleHelper
 import com.rachmad.training.dicodingstoryapp.util.ViewModelFactory
 import com.rachmad.training.dicodingstoryapp.util.ui.gone
@@ -96,7 +98,7 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
     private fun init() {
         layout.storyList.apply {
             layoutManager = LinearLayoutManager(context)
-            storyAdapter = StoryItemRecyclerViewAdapter(this@MainActivity)
+            storyAdapter = StoryItemRecyclerViewAdapter(this@MainActivity, this@MainActivity)
             adapter = storyAdapter
         }
         viewModel = ViewModelProvider(this, ViewModelFactory(UserPreference.getInstance(dataStore)))[MainViewModel::class.java]
@@ -136,8 +138,8 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onClick(id: String) {
-
+    override fun onClick(data: StoryData) {
+        startActivity(StoryDetailsActivity.instance(this, data))
     }
 
     private fun reloadActivity(lang: String){
@@ -161,5 +163,5 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
 }
 
 interface OnSelectedStory{
-    fun onClick(id: String)
+    fun onClick(data: StoryData)
 }
