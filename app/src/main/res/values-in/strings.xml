@@ -40,5 +40,14 @@
     <string name="week">minggu</string>
     <string name="one_week">satu minggu</string>
     <string name="day">hari</string>
-    <string name="one_day">one day</string>
+    <string name="one_day">satu hari</string>
+    <string name="add">tambah</string>
+    <string name="what_you_think">Apa yang Anda pikirkan?</string>
+    <string name="create_story">Buat cerita</string>
+    <string name="guest">Tamu</string>
+    <string name="camera_image">Kamera/gambar</string>
+    <string name="my_location">Set lokasi saya</string>
+    <string name="location_denied_description">Anda tidak bisa menggunakan camera, izin ditolak!</string>
+    <string name="permission_granted">Izin diberikan</string>
+    <string name="open_setting">Izin ditolak, aktifkan manual di setting aplikasi</string>
 </resources>

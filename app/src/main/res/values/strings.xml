@@ -41,4 +41,13 @@
     <string name="one_week">one week</string>
     <string name="day">days</string>
     <string name="one_day">one day</string>
+    <string name="add">add</string>
+    <string name="what_you_think">What you think?</string>
+    <string name="create_story">Create story</string>
+    <string name="guest">Guest</string>
+    <string name="camera_image">Camera/image</string>
+    <string name="my_location">Set my location</string>
+    <string name="location_denied_description">You cannot using location, permission denied!</string>
+    <string name="permission_granted">Permission granted</string>
+    <string name="open_setting">Permission denied, to manual setup inside application setting</string>
 </resources>

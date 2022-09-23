@@ -52,6 +52,7 @@
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxHeight="@dimen/max_height_description"
             android:scrollbars="vertical"
             android:textColor="@color/force_white"
             android:layout_marginHorizontal="@dimen/margin_padding_size_medium"

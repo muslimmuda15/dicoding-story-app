@@ -15,6 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:foreground="?attr/selectableItemBackground"
+            android:transitionName="story_item"
             android:orientation="vertical">
 
             <ImageView
@@ -25,7 +26,14 @@
                 android:maxHeight="@dimen/image_min_height"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
+                android:transitionName="photo"
                 android:contentDescription="@string/account_image" />
+
+            <com.rachmad.training.dicodingstoryapp.util.ui.CustomLoading
+                android:id="@+id/loading"
+                android:layout_width="match_parent"
+                android:layout_centerInParent="true"
+                android:layout_height="300dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -43,6 +51,7 @@
                     android:textColor="@color/force_white"
                     app:drawableStartCompat="@drawable/ic_baseline_location_on_24"
                     android:drawablePadding="@dimen/margin_padding_size_default"
+                    android:transitionName="location"
                     android:visibility="gone"
                     tools:text="Location" />
 
@@ -61,6 +70,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:textColor="@color/force_white"
+                        android:transitionName="fullName"
                         android:textSize="@dimen/text_size_large"
                         tools:text="My Name" />
 
@@ -70,6 +80,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/force_white"
                         android:layout_marginHorizontal="@dimen/margin_padding_size_medium"
+                        android:transitionName="date"
                         android:elevation="@dimen/margin_padding_size_xxlarge"
                         tools:text="5 jam" />
                 </LinearLayout>
@@ -82,6 +93,7 @@
                     android:ellipsize="end"
                     android:maxLines="3"
                     android:paddingBottom="@dimen/margin_padding_size_medium"
+                    android:transitionName="description"
                     android:textColor="@color/force_white"
                     tools:text="Lorem ipsum dolor sit amet" />
             </LinearLayout>

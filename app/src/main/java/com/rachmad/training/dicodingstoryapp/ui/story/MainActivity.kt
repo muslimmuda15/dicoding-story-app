@@ -6,8 +6,12 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityOptionsCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -21,6 +25,7 @@ import com.rachmad.training.dicodingstoryapp.databinding.ActivityMainBinding
 import com.rachmad.training.dicodingstoryapp.model.StoryData
 import com.rachmad.training.dicodingstoryapp.repository.UserPreference
 import com.rachmad.training.dicodingstoryapp.ui.login.LoginActivity
+import com.rachmad.training.dicodingstoryapp.ui.story.add.NewStoryActivity
 import com.rachmad.training.dicodingstoryapp.ui.story.detail.StoryDetailsActivity
 import com.rachmad.training.dicodingstoryapp.util.LocaleHelper
 import com.rachmad.training.dicodingstoryapp.util.ViewModelFactory
@@ -33,6 +38,11 @@ import javax.inject.Inject
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user")
 
 class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
+    /**
+     * Kenapa pake shared preference padahal sudah ada data store?
+     * Karena saya perlu penyimpanan data tanpa ada ikatan lifecycle dan view model
+     * Untuk keperluan ganti bahasa tanpa secara langsung in-app
+     */
     @Inject lateinit var sp: SharedPreferences
     private lateinit var viewModel: MainViewModel
     private lateinit var storyAdapter: StoryItemRecyclerViewAdapter
@@ -81,6 +91,10 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
                     requestNetwork(it)
                 }
             }
+        }
+
+        layout.addStory.setOnClickListener {
+            startActivity(NewStoryActivity.instance(this))
         }
     }
 
@@ -138,8 +152,11 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onClick(data: StoryData) {
-        startActivity(StoryDetailsActivity.instance(this, data))
+    override fun onClick(mainContainer: RelativeLayout, data: StoryData) {
+        startActivity(StoryDetailsActivity.instance(this, data), ActivityOptionsCompat.makeSceneTransitionAnimation(
+            this,
+            mainContainer, "story_item",
+        ).toBundle())
     }
 
     private fun reloadActivity(lang: String){
@@ -163,5 +180,8 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
 }
 
 interface OnSelectedStory{
-    fun onClick(data: StoryData)
+    fun onClick(
+        mainContainer: RelativeLayout,
+        data: StoryData
+    )
 }

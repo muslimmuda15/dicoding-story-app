@@ -6,12 +6,16 @@ import com.rachmad.training.dicodingstoryapp.repository.UserPreference
 import com.rachmad.training.dicodingstoryapp.ui.login.LoginViewModel
 import com.rachmad.training.dicodingstoryapp.ui.register.RegisterViewModel
 import com.rachmad.training.dicodingstoryapp.ui.story.MainViewModel
+import com.rachmad.training.dicodingstoryapp.ui.story.add.NewStoryViewModel
 
 class ViewModelFactory(private val pref: UserPreference) : ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
+            modelClass.isAssignableFrom(NewStoryViewModel::class.java) -> {
+                NewStoryViewModel(pref) as T
+            }
             modelClass.isAssignableFrom(MainViewModel::class.java) -> {
                 MainViewModel(pref) as T
             }
