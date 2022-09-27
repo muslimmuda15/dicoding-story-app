@@ -6,9 +6,7 @@ import androidx.multidex.MultiDex
 import com.rachmad.training.dicodingstoryapp.di.AppModule
 import com.rachmad.training.dicodingstoryapp.di.ApplicationComponent
 import com.rachmad.training.dicodingstoryapp.di.DaggerApplicationComponent
-import com.rachmad.training.dicodingstoryapp.util.LocaleHelper
 import timber.log.Timber
-import java.util.*
 
 class App: Application() {
     override fun onCreate() {
@@ -19,6 +17,11 @@ class App: Application() {
         }
         appComponent = DaggerApplicationComponent.builder()
             .appModule(AppModule(this)).build()
+    }
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        MultiDex.install(this)
     }
 
     companion object {

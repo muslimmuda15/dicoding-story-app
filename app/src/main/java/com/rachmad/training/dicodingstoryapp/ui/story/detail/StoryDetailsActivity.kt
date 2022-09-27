@@ -12,6 +12,7 @@ import com.rachmad.training.dicodingstoryapp.databinding.ActivityStoryDetailsBin
 import com.rachmad.training.dicodingstoryapp.model.StoryData
 import com.rachmad.training.dicodingstoryapp.util.Geolocation
 import com.rachmad.training.dicodingstoryapp.util.TimeUtil
+import com.rachmad.training.dicodingstoryapp.util.getSerializable
 import com.rachmad.training.dicodingstoryapp.util.ui.gone
 import com.rachmad.training.dicodingstoryapp.util.ui.visible
 
@@ -28,7 +29,7 @@ class StoryDetailsActivity: BaseActivity<ActivityStoryDetailsBinding>() {
     @SuppressLint("SetTextI18n")
     private fun init(){
         geolocation = Geolocation(this)
-        storyData = intent.getSerializableExtra(STORY_INTENT_DATA) as StoryData
+        storyData = getSerializable(this, STORY_INTENT_DATA, StoryData::class.java)
 
         with(layout){
             layout.description.movementMethod = ScrollingMovementMethod.getInstance()

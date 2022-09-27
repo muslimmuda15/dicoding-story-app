@@ -1,79 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.story.add.NewStoryActivity">
 
-    <RelativeLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginHorizontal="@dimen/margin_padding_size_medium"
-        android:layout_marginTop="@dimen/margin_padding_size_medium">
+        android:layout_height="wrap_content">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/full_name_layout"
+        <Button
+            android:id="@+id/posting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:minWidth="@dimen/max_height_description">
+            android:layout_gravity="end"
+            android:text="@string/post_story"
+            android:layout_marginEnd="@dimen/margin_padding_size_medium"/>
+    </androidx.appcompat.widget.Toolbar>
 
-            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                android:id="@+id/full_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="@dimen/text_size_medium"
-                android:labelFor="@id/full_name_layout"
-                android:hint="@string/full_name" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/description_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/full_name_layout"
-            android:layout_marginTop="@dimen/margin_padding_size_default">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/description"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="@string/what_you_think"
-                android:inputType="text|textMultiLine"
-                android:gravity="top|start"
-                android:minHeight="@dimen/max_height_description" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Button
-            android:id="@+id/location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/description_layout"
-            android:layout_marginTop="@dimen/margin_padding_size_default"
-            android:text="@string/my_location"
-            android:textColor="@color/black"
-            android:gravity="start|center_vertical"
-            app:icon="@drawable/ic_baseline_location_on_24"
-            app:iconTint="@color/md_red_400"
-            style="?attr/materialButtonOutlinedStyle"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/location"
-            android:text="@string/camera_image"
-            android:textColor="@color/black"
-            android:gravity="start|center_vertical"
-            app:icon="@drawable/ic_base_camera_image_24"
-            style="?attr/materialButtonOutlinedStyle" />
-    </RelativeLayout>
-
-    <com.rachmad.training.dicodingstoryapp.util.ui.CustomLoading
-        android:id="@+id/loading"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</FrameLayout>
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_padding_size_medium"
+                android:layout_marginTop="@dimen/margin_padding_size_medium"
+                android:paddingBottom="@dimen/margin_padding_size_large">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/full_name_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:minWidth="@dimen/max_height_description">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/full_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/text_size_medium"
+                        android:labelFor="@id/full_name_layout"
+                        android:hint="@string/full_name" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/description_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/full_name_layout"
+                    android:layout_marginTop="@dimen/margin_padding_size_default">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/description"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="@string/what_you_think"
+                        android:inputType="text|textMultiLine"
+                        android:gravity="top|start"
+                        android:minHeight="@dimen/max_height_description" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/description_layout"
+                    android:layout_marginTop="@dimen/margin_padding_size_default"
+                    android:text="@string/my_location"
+                    android:textColor="@color/black"
+                    android:gravity="start|center_vertical"
+                    app:icon="@drawable/ic_baseline_location_on_24"
+                    app:iconTint="@color/md_red_400"
+                    style="?attr/materialButtonOutlinedStyle"/>
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/margin_padding_size_default"
+                    android:visibility="gone"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/location"/>
+
+                <Button
+                    android:id="@+id/take_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/image"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/camera_image"
+                    android:textColor="@color/black"
+                    app:icon="@drawable/ic_base_camera_image_24"
+                    style="?attr/materialButtonOutlinedStyle"/>
+            </RelativeLayout>
+        </ScrollView>
+
+        <com.rachmad.training.dicodingstoryapp.util.ui.CustomLoading
+            android:id="@+id/loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+</LinearLayout>

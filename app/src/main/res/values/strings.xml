@@ -45,9 +45,15 @@
     <string name="what_you_think">What you think?</string>
     <string name="create_story">Create story</string>
     <string name="guest">Guest</string>
-    <string name="camera_image">Camera/image</string>
+    <string name="camera_image">Set camera/image</string>
+    <string name="update_camera_image">Update camera/image</string>
     <string name="my_location">Set my location</string>
     <string name="location_denied_description">You cannot using location, permission denied!</string>
     <string name="permission_granted">Permission granted</string>
     <string name="open_setting">Permission denied, to manual setup inside application setting</string>
+    <string name="gallery">gallery</string>
+    <string name="photo">photo</string>
+    <string name="unknown_take_photo">Something went wrong when taking the photo</string>
+    <string name="unknown_load_photo">Something went wrong when load the photo</string>
+    <string name="post_story">POSTING</string>
 </resources>

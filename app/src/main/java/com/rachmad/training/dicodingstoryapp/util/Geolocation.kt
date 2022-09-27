@@ -7,15 +7,14 @@ import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
-import android.widget.Toast
+import android.os.Build
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
-import com.rachmad.training.dicodingstoryapp.R
 import java.lang.Exception
 import java.util.*
 
 class Geolocation {
-    lateinit var activity: Activity
+    private lateinit var activity: Activity
     constructor(context: Context){
         geocoder = Geocoder(context, Locale.getDefault())
     }
@@ -25,51 +24,57 @@ class Geolocation {
         geocoder = Geocoder(activity, Locale.getDefault())
     }
 
-    var geocoder: Geocoder
-    lateinit var addresses: List<Address>
+    private var geocoder: Geocoder
+    private var addresses: List<Address>? = null
 
     fun setLocation(lat: Double, long: Double) {
-        addresses = geocoder.getFromLocation(lat, long, 1)
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.T) {
+//            geocoder.getFromLocation(lat, long, 1) {
+//                addresses = it
+//            }
+//        } else {
+            addresses = geocoder.getFromLocation(lat, long, 1)
+//        }
     }
 
     val address: String?
         get() = try {
-            addresses[0].getAddressLine(0)
+            addresses?.get(0)?.getAddressLine(0)
         } catch (e: Exception) {
             null
         }
 
     val city: String?
         get() = try {
-            addresses[0].locality
+            addresses?.get(0)?.locality
         } catch (e: Exception) {
             null
         }
 
     val state: String?
         get() = try {
-            addresses[0].adminArea
+            addresses?.get(0)?.adminArea
         } catch (e: Exception) {
             null
         }
 
     val country: String?
         get() = try {
-            addresses[0].countryName
+            addresses?.get(0)?.countryName
         } catch (e: Exception) {
             null
         }
 
     val postalCode: String?
         get() = try {
-            addresses[0].postalCode
+            addresses?.get(0)?.postalCode
         } catch (e: Exception) {
             null
         }
 
     val knownName: String?
         get() = try {
-            addresses[0].featureName
+            addresses?.get(0)?.featureName
         } catch (e: Exception) {
             null
         }
@@ -77,7 +82,7 @@ class Geolocation {
     private var fusedLocation: FusedLocationProviderClient? = null
     private var locationRequest: LocationRequest? = null
     private var locationCallback: LocationCallback? = null
-    fun getLocationUpdate(callback:(Location?) -> Unit){
+    fun getLocationUpdate(callback: (Location?) -> Unit){
         fusedLocation = LocationServices.getFusedLocationProviderClient(activity)
         locationRequest = LocationRequest.create().apply {
             interval = 60000        // set 1 menit update

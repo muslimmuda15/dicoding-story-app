@@ -13,6 +13,7 @@
 
     <!-- Touch Target Size, https://material.io/design/usability/accessibility.html#layout-and-typography -->
     <dimen name="standard_touch_size">48dp</dimen>
+    <dimen name="camera_floating_button_size">76dp</dimen>
 
     <!-- Font sizes, https://material.io/design/typography/the-type-system.html#type-scale -->
     <dimen name="text_size_micro">12sp</dimen>

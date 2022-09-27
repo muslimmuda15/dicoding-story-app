@@ -1,17 +1,27 @@
 package com.rachmad.training.dicodingstoryapp.util
 
+import android.app.Activity
 import android.content.Context
-import android.util.Log
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.Image
 import android.util.Patterns
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.rachmad.training.dicodingstoryapp.R
 import com.rachmad.training.dicodingstoryapp.model.BaseResponseData
 import okhttp3.ResponseBody
+import java.io.ByteArrayOutputStream
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.Serializable
+import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.Exception
+
+private const val cameraFileName = "story"
 
 fun CharSequence?.isValidEmail() = !isNullOrBlank() && Patterns.EMAIL_ADDRESS.matcher(this).matches()
 
@@ -20,22 +30,80 @@ fun errorResponseData(body: ResponseBody?): BaseResponseData {
     return Gson().fromJson(body?.charStream(), type)
 }
 
+fun <T : Serializable?> getSerializable(activity: Activity, name: String, clazz: Class<T>): T {
+//    return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+//        activity.intent.getSerializableExtra(name, clazz)!!
+//    else
+        return activity.intent.getSerializableExtra(name) as T
+}
+
+fun rotateImage(bytes: ByteArray): ByteArray{
+    /**
+     * Beberapa hape merotate hasil gambarnya seperti samsung
+     * maka dari itu perlu force image supaya posisinya selalu sesuai seperti take camera
+     * untuk pengecekannya check perbandingan image width and heightnya
+     * Note: belum melakukan advance research jenis hape apa aja yang merotate hasil gambarnya
+     * jadi sementara melakukan proses ganda yang kurang efektif
+     */
+    var bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+    if(bitmap.width > bitmap.height) {
+        val matrix = Matrix()
+        matrix.postRotate(90F)
+        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+    }
+    val byteArrayOutputStream = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+    val b = byteArrayOutputStream.toByteArray()
+    bitmap.recycle()
+    return b
+}
+
+fun Image.save(context: Context, result: (Boolean) -> Unit) {
+    try {
+        val buffer: ByteBuffer = planes[0].buffer
+        val bytes = ByteArray(buffer.capacity()).also { buffer.get(it) }
+        val processedBytes = rotateImage(bytes)
+
+        /**
+         * Penyimpanan di tempat tersembunyi
+         */
+        val fos: FileOutputStream = context.openFileOutput(cameraFileName, Context.MODE_PRIVATE)
+
+        fos.write(processedBytes)
+        fos.close()
+        result(true)
+    } catch(e: Exception){
+        result(false)
+    }
+}
+
+fun loadImage(context: Context): Bitmap? {
+    try {
+        val fis: FileInputStream = context.openFileInput(cameraFileName)
+        val bitmap = BitmapFactory.decodeStream(fis)
+        fis.close()
+        return bitmap
+    } catch (e: Exception) {
+        return null
+    }
+}
+
 class TimeUtil(val context: Context) {
     fun toDateLong(input: String): Long {
-        try {
+        return try {
             val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
             sdf.timeZone = TimeZone.getTimeZone("UTC")
-            return sdf.parse(input)?.time ?: 0L
+            sdf.parse(input)?.time ?: 0L
         } catch(e: Exception){
-            return 0L
+            0L
         }
     }
 
     fun toDescriptionDateTime(time: Long): String?{
-        try {
-            return SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault()).format(time)
+        return try {
+            SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault()).format(time)
         } catch (e: Exception) {
-            return null
+            null
         }
     }
 
@@ -45,26 +113,26 @@ class TimeUtil(val context: Context) {
         try {
             val pasTime = Date(time)
             val nowTime = Date()
-            val dateDiff: Long = nowTime.getTime() - pasTime.getTime()
+            val dateDiff: Long = nowTime.time - pasTime.time
             val second: Long = TimeUnit.MILLISECONDS.toSeconds(dateDiff)
             val minute: Long = TimeUnit.MILLISECONDS.toMinutes(dateDiff)
             val hour: Long = TimeUnit.MILLISECONDS.toHours(dateDiff)
             val day: Long = TimeUnit.MILLISECONDS.toDays(dateDiff)
             if (second < 60) {
-                if(second > 1)
-                    convTime = "$second ${context.getString(R.string.sec)} $suffix"
+                convTime = if(second > 1)
+                    "$second ${context.getString(R.string.sec)} $suffix"
                 else
-                    convTime = "${context.getString(R.string.one_sec)} $suffix"
+                    "${context.getString(R.string.one_sec)} $suffix"
             } else if (minute < 60) {
-                if(minute > 1)
-                    convTime = "$minute ${context.getString(R.string.min)} $suffix"
+                convTime = if(minute > 1)
+                    "$minute ${context.getString(R.string.min)} $suffix"
                 else
-                    convTime = "${context.getString(R.string.one_min)} $suffix"
+                    "${context.getString(R.string.one_min)} $suffix"
             } else if (hour < 24) {
-                if(hour > 1)
-                    convTime = "$hour ${context.getString(R.string.hour)} $suffix"
+                convTime = if(hour > 1)
+                    "$hour ${context.getString(R.string.hour)} $suffix"
                 else
-                    convTime = "${context.getString(R.string.one_hour)} $suffix"
+                    "${context.getString(R.string.one_hour)} $suffix"
             } else if (day >= 7) {
                 convTime = if (day > 360) {
                     if((day / 360) > 1)
@@ -83,10 +151,10 @@ class TimeUtil(val context: Context) {
                         "${context.getString(R.string.one_week)} $suffix"
                 }
             } else if (day < 7) {
-                if(day > 1)
-                    convTime = "$day ${context.getString(R.string.day)} $suffix"
+                convTime = if(day > 1)
+                    "$day ${context.getString(R.string.day)} $suffix"
                 else
-                    convTime = "${context.getString(R.string.one_day)} $suffix"
+                    "${context.getString(R.string.one_day)} $suffix"
             }
         } catch (e: Exception) {
             e.printStackTrace()

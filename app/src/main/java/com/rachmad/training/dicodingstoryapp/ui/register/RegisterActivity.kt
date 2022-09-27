@@ -15,7 +15,6 @@ import com.rachmad.training.dicodingstoryapp.databinding.ActivityRegisterBinding
 import com.rachmad.training.dicodingstoryapp.BaseActivity
 import com.rachmad.training.dicodingstoryapp.model.LoginRequestData
 import com.rachmad.training.dicodingstoryapp.repository.UserPreference
-import com.rachmad.training.dicodingstoryapp.ui.login.LoginViewModel
 import com.rachmad.training.dicodingstoryapp.util.ViewModelFactory
 import com.rachmad.training.dicodingstoryapp.util.isValidEmail
 import com.rachmad.training.dicodingstoryapp.util.ui.createLinks
@@ -108,7 +107,7 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             android.R.id.home -> {
-                onBackPressed()
+                finish()
             }
         }
         return super.onOptionsItemSelected(item)

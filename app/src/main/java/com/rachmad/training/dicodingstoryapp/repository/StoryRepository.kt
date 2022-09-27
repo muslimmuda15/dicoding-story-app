@@ -2,8 +2,6 @@ package com.rachmad.training.dicodingstoryapp.repository
 
 import com.rachmad.training.dicodingstoryapp.App
 import com.rachmad.training.dicodingstoryapp.model.BaseResponseData
-import com.rachmad.training.dicodingstoryapp.model.LoginData
-import com.rachmad.training.dicodingstoryapp.model.LoginRequestData
 import com.rachmad.training.dicodingstoryapp.util.errorResponseData
 import com.rachmad.training.dicodingstoryapp.webservice.EndPoint
 import retrofit2.Call
@@ -18,7 +16,7 @@ class StoryRepository {
     }
 
     fun stories(token: String, success: (BaseResponseData?) -> Unit, error: (BaseResponseData?) -> Unit, failure: (Throwable?) -> Unit){
-        val call = client.getAllStories(token = "Bearer ${token}")
+        val call = client.getAllStories(token = "Bearer $token")
         call.enqueue(object: Callback<BaseResponseData> {
             override fun onResponse(
                 call: Call<BaseResponseData>,

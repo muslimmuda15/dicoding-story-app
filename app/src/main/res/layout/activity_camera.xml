@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.story.add.CameraActivity">
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        app:scaleType="fitCenter" />
+
+    <Button
+        android:id="@+id/take"
+        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+        android:layout_width="@dimen/camera_floating_button_size"
+        android:layout_height="@dimen/camera_floating_button_size"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/margin_padding_size_xxlarge"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        app:backgroundTint="@color/force_white"
+        app:shapeAppearanceOverlay="@style/Button.Circle" />
+
+    <Button
+        android:id="@+id/gallery"
+        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignBottom="@+id/take"
+        android:layout_marginStart="@dimen/margin_padding_size_medium"
+        android:layout_marginEnd="@dimen/margin_padding_size_xxlarge"
+        android:layout_marginBottom="@dimen/margin_padding_size_medium"
+        android:layout_toStartOf="@+id/take"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:padding="0dp"
+        app:backgroundTint="@color/force_white"
+        app:icon="@drawable/ic_baseline_image_24"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="24dp"
+        app:shapeAppearanceOverlay="@style/Button.Circle"
+        tools:ignore="RelativeOverlap" />
+
+    <Button
+        android:id="@+id/camera_selector"
+        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignBottom="@+id/take"
+        android:layout_marginStart="@dimen/margin_padding_size_xxlarge"
+        android:layout_marginBottom="@dimen/margin_padding_size_medium"
+        android:layout_toEndOf="@+id/take"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        android:padding="0dp"
+        app:backgroundTint="@color/force_white"
+        app:icon="@drawable/ic_baseline_autorenew_24"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="24dp"
+        app:shapeAppearanceOverlay="@style/Button.Circle"
+        tools:ignore="RelativeOverlap" />
+
+    <com.rachmad.training.dicodingstoryapp.util.ui.CustomLoading
+        android:id="@+id/loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:layout_centerInParent="true" />
+</RelativeLayout>

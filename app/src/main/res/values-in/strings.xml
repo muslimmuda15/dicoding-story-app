@@ -45,9 +45,15 @@
     <string name="what_you_think">Apa yang Anda pikirkan?</string>
     <string name="create_story">Buat cerita</string>
     <string name="guest">Tamu</string>
-    <string name="camera_image">Kamera/gambar</string>
+    <string name="camera_image">Set kamera/gambar</string>
+    <string name="update_camera_image">Update kamera/gambar</string>
     <string name="my_location">Set lokasi saya</string>
     <string name="location_denied_description">Anda tidak bisa menggunakan camera, izin ditolak!</string>
     <string name="permission_granted">Izin diberikan</string>
     <string name="open_setting">Izin ditolak, aktifkan manual di setting aplikasi</string>
+    <string name="gallery">galleri</string>
+    <string name="photo">foto</string>
+    <string name="unknown_take_photo">Terjadi kesalahan saat mengambil foto</string>
+    <string name="unknown_load_photo">Terjadi kesalahan saat memuat foto</string>
+    <string name="post_story">POSTING</string>
 </resources>
