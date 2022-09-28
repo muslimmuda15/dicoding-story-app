@@ -3,6 +3,8 @@ package com.rachmad.training.dicodingstoryapp.webservice
 import com.rachmad.training.dicodingstoryapp.model.LoginRequestData
 import com.rachmad.training.dicodingstoryapp.model.BaseResponseData
 import com.rachmad.training.dicodingstoryapp.model.CreateStoryRequestData
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -17,16 +19,23 @@ interface EndPoint {
         @Body authData: LoginRequestData
     ): Call<BaseResponseData>
 
-    @Headers("Content-Type: multipart/form-data")
+    @Multipart
     @POST("stories")
     fun addStories(
         @Header("Authorization") token: String,
-        @Body storyData: CreateStoryRequestData
+        @Part("photo\"; filename=\"image") file: RequestBody,
+        @Part("description") description: String,
+        @Part("lat") lat: Double?,
+        @Part("lon") long: Double?,
     ): Call<BaseResponseData>
 
+    @Multipart
     @POST("stories/guest")
     fun addGuestStories(
-        @Body storyData: CreateStoryRequestData
+        @Part("photo\"; filename=\"image") file: RequestBody,
+        @Part("description") description: String,
+        @Part("lat") lat: Double?,
+        @Part("lon") long: Double?,
     ): Call<BaseResponseData>
 
     @GET("stories")

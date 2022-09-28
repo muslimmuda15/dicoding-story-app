@@ -2,24 +2,26 @@ package com.rachmad.training.dicodingstoryapp.util
 
 import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.Image
+import android.net.Uri
+import android.provider.MediaStore
 import android.util.Patterns
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.rachmad.training.dicodingstoryapp.R
 import com.rachmad.training.dicodingstoryapp.model.BaseResponseData
 import okhttp3.ResponseBody
-import java.io.ByteArrayOutputStream
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.Serializable
+import java.io.*
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+
 
 private const val cameraFileName = "story"
 
@@ -52,7 +54,7 @@ fun rotateImage(bytes: ByteArray): ByteArray{
         bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
     val byteArrayOutputStream = ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream)
     val b = byteArrayOutputStream.toByteArray()
     bitmap.recycle()
     return b
@@ -64,10 +66,13 @@ fun Image.save(context: Context, result: (Boolean) -> Unit) {
         val bytes = ByteArray(buffer.capacity()).also { buffer.get(it) }
         val processedBytes = rotateImage(bytes)
 
+        val cw = ContextWrapper(context)
+        val dir = cw.getDir(cameraFileName, Context.MODE_PRIVATE)
+        val file = File(dir, "image.jpg")
         /**
          * Penyimpanan di tempat tersembunyi
          */
-        val fos: FileOutputStream = context.openFileOutput(cameraFileName, Context.MODE_PRIVATE)
+        val fos = FileOutputStream(file)
 
         fos.write(processedBytes)
         fos.close()
@@ -77,10 +82,42 @@ fun Image.save(context: Context, result: (Boolean) -> Unit) {
     }
 }
 
+fun getPath(context: Context, uri: Uri): String? {
+    val projection = arrayOf(MediaStore.Images.Media.DATA)
+    val cursor: Cursor =
+        context.getContentResolver().query(uri, projection, null, null, null) ?: return null
+    val column_index: Int = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+    cursor.moveToFirst()
+    val s: String = cursor.getString(column_index)
+    cursor.close()
+    return s
+}
+
+fun loadFile(context: Context): File? {
+    try {
+        val cw = ContextWrapper(context)
+        val dir = cw.getDir(cameraFileName, Context.MODE_PRIVATE)
+        return File(dir, "image.jpg")
+    } catch(e: Exception){
+        return null
+    }
+}
+
 fun loadImage(context: Context): Bitmap? {
     try {
-        val fis: FileInputStream = context.openFileInput(cameraFileName)
-        val bitmap = BitmapFactory.decodeStream(fis)
+        val cw = ContextWrapper(context)
+        val dir = cw.getDir(cameraFileName, Context.MODE_PRIVATE)
+        val file = File(dir, "image.jpg")
+
+        val fis = FileInputStream(file)
+        var bitmap = BitmapFactory.decodeStream(fis)
+
+        val out = ByteArrayOutputStream()
+        if(bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out)){
+            val bytes = out.toByteArray()
+            bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+        }
+        out.close()
         fis.close()
         return bitmap
     } catch (e: Exception) {

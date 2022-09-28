@@ -52,6 +52,7 @@
                         android:textStyle="bold"
                         android:textSize="@dimen/text_size_medium"
                         android:labelFor="@id/full_name_layout"
+                        android:editable="false"
                         android:hint="@string/full_name" />
                 </com.google.android.material.textfield.TextInputLayout>
 

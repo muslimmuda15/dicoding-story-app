@@ -8,6 +8,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityOptionsCompat
 import androidx.datastore.core.DataStore
@@ -46,6 +48,8 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
     private lateinit var storyAdapter: StoryItemRecyclerViewAdapter
     private lateinit var alertDialog: AlertDialog
 
+    private lateinit var activityResult: ActivityResultLauncher<Intent>
+
     init {
         App.appComponent.inject(this)
     }
@@ -54,8 +58,26 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
         super.onCreate(savedInstanceState)
 
         init()
+        initResult()
         observer()
         listener()
+    }
+
+    private fun initResult(){
+        activityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            when (result.resultCode) {
+                NewStoryActivity.RESULT_REQUEST_STORY -> {
+                    val isSuccess = result.data?.getBooleanExtra(NewStoryActivity.IS_STORY_SUCCESS, false) ?: false
+                    if(isSuccess) {
+                        lifecycleScope.launch {
+                            viewModel.getUser().token?.let {
+                                requestNetwork(it)
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun requestNetwork(token: String){
@@ -92,7 +114,7 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
         }
 
         layout.addStory.setOnClickListener {
-            startActivity(NewStoryActivity.instance(this))
+            activityResult.launch(NewStoryActivity.instance(this))
         }
     }
 

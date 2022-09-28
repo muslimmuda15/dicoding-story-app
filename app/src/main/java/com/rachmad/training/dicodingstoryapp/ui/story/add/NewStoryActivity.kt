@@ -1,5 +1,6 @@
 package com.rachmad.training.dicodingstoryapp.ui.story.add
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -20,16 +21,17 @@ import com.bumptech.glide.Glide
 import com.rachmad.training.dicodingstoryapp.BaseActivity
 import com.rachmad.training.dicodingstoryapp.R
 import com.rachmad.training.dicodingstoryapp.databinding.ActivityNewStoryBinding
+import com.rachmad.training.dicodingstoryapp.model.CreateStoryRequestData
 import com.rachmad.training.dicodingstoryapp.repository.UserPreference
 import com.rachmad.training.dicodingstoryapp.ui.story.add.CameraActivity.Companion.CAMERA_RESULT_CODE
 import com.rachmad.training.dicodingstoryapp.ui.story.add.CameraActivity.Companion.GALLERY_RESULT
 import com.rachmad.training.dicodingstoryapp.ui.story.add.CameraActivity.Companion.GALLERY_RESULT_CODE
 import com.rachmad.training.dicodingstoryapp.ui.story.add.CameraActivity.Companion.IMAGE_RESULT
-import com.rachmad.training.dicodingstoryapp.util.Geolocation
-import com.rachmad.training.dicodingstoryapp.util.ViewModelFactory
-import com.rachmad.training.dicodingstoryapp.util.loadImage
+import com.rachmad.training.dicodingstoryapp.util.*
 import com.rachmad.training.dicodingstoryapp.util.ui.gone
 import com.rachmad.training.dicodingstoryapp.util.ui.visible
+import timber.log.Timber
+import java.io.File
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user")
 
@@ -37,6 +39,10 @@ class NewStoryActivity: BaseActivity<ActivityNewStoryBinding>() {
     private lateinit var viewModel: NewStoryViewModel
     private lateinit var geoLocation: Geolocation
     private var bitmap: Bitmap? = null
+    private var token: String? = null
+    private var lat: Double? = null
+    private var long: Double? = null
+    private var file: File? = null
 
     private lateinit var activityResult: ActivityResultLauncher<Intent>
 
@@ -63,6 +69,7 @@ class NewStoryActivity: BaseActivity<ActivityNewStoryBinding>() {
                         bitmap?.recycle()
 
                         bitmap = loadImage(this)
+                        file = loadFile(this)
                         Glide.with(layout.image)
                             .asBitmap()
                             .load(bitmap)
@@ -81,6 +88,7 @@ class NewStoryActivity: BaseActivity<ActivityNewStoryBinding>() {
                 }
                 GALLERY_RESULT_CODE -> {
                     val resultUri = result.data?.getParcelableExtra<Uri>(GALLERY_RESULT)
+                    file = File(getPath(this, resultUri!!))
                     bitmap?.recycle()
                     Glide.with(layout.image)
                         .load(resultUri)
@@ -100,6 +108,9 @@ class NewStoryActivity: BaseActivity<ActivityNewStoryBinding>() {
                 loading.visible()
                 geoLocation.getLocationUpdate{
                     it?.let {
+                        lat = it.latitude
+                        long = it.longitude
+
                         geoLocation.setLocation(it.latitude, it.longitude)
                         location.text = geoLocation.address ?: geoLocation.city ?: geoLocation.state
                                 ?: geoLocation.country ?: getString(
@@ -120,7 +131,47 @@ class NewStoryActivity: BaseActivity<ActivityNewStoryBinding>() {
             }
 
             posting.setOnClickListener {
-                
+                if(file != null) {
+                    val userToken: String? = if(fullName.text.toString() == getString(R.string.guest))
+                        null
+                    else
+                        token
+
+                    loading.visible()
+                    val requestData = CreateStoryRequestData(
+                        description = description.text.toString(),
+                        lat = lat,
+                        lon = long,
+                        photo = file!!
+                    )
+                    viewModel.addStory(userToken, requestData, {
+                       loading.gone()
+                        setResult(RESULT_REQUEST_STORY, Intent().apply {
+                            putExtra(IS_STORY_SUCCESS, true)
+                        })
+                        finish()
+                    }, {
+                        setResult(RESULT_REQUEST_STORY, Intent().apply {
+                            putExtra(IS_STORY_SUCCESS, false)
+                        })
+                        loading.gone()
+                        Toast.makeText(this@NewStoryActivity, it?.message, Toast.LENGTH_SHORT)
+                            .show()
+                        Timber.i(it?.message)
+                        finish()
+                    }, {
+                        setResult(RESULT_REQUEST_STORY, Intent().apply {
+                            putExtra(IS_STORY_SUCCESS, false)
+                        })
+                        loading.gone()
+                        Toast.makeText(this@NewStoryActivity, it?.message, Toast.LENGTH_SHORT)
+                            .show()
+                        Timber.i(it?.message)
+                        finish()
+                    })
+                } else {
+                    Toast.makeText(this@NewStoryActivity, getString(R.string.fill_image), Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -138,6 +189,7 @@ class NewStoryActivity: BaseActivity<ActivityNewStoryBinding>() {
     private fun observer(){
         viewModel.getUserLiveData().observe(this){
             layout.loading.gone()
+            token = it.token
             val items = arrayOf(it.name, getString(R.string.guest))
             layout.fullName.apply {
                 setText(it.name)
@@ -156,12 +208,16 @@ class NewStoryActivity: BaseActivity<ActivityNewStoryBinding>() {
                 Toast.makeText(this, R.string.permission_granted, Toast.LENGTH_SHORT).show()
                 geoLocation.startLocationUpdate()
             } else if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                Toast.makeText(this, R.string.open_setting, Toast.LENGTH_SHORT).show()
-                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                    addCategory(Intent.CATEGORY_DEFAULT)
-                    data = Uri.parse("package:$packageName")
-                }.run(::startActivity)
-                finish()
+                if(shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) && shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                    geoLocation.startLocationUpdate()
+                } else {
+                    Toast.makeText(this, R.string.open_setting, Toast.LENGTH_SHORT).show()
+                    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        addCategory(Intent.CATEGORY_DEFAULT)
+                        data = Uri.parse("package:$packageName")
+                    }.run(::startActivity)
+                    finish()
+                }
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -180,6 +236,9 @@ class NewStoryActivity: BaseActivity<ActivityNewStoryBinding>() {
     }
 
     companion object {
+        const val RESULT_REQUEST_STORY = 7000
+        const val IS_STORY_SUCCESS = "is-story-success"
+
         fun instance(context: Context): Intent = Intent(context, NewStoryActivity::class.java)
     }
 

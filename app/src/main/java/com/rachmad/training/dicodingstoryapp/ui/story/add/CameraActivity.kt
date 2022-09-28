@@ -111,12 +111,17 @@ class CameraActivity: BaseActivity<ActivityCameraBinding>() {
                 Toast.makeText(this, R.string.permission_granted, Toast.LENGTH_SHORT).show()
                 startCamera()
             } else if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                Toast.makeText(this, getString(R.string.open_setting), Toast.LENGTH_SHORT).show()
-                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                    addCategory(Intent.CATEGORY_DEFAULT)
-                    data = Uri.parse("package:$packageName")
-                }.run(::startActivity)
-                finish()
+                if(shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)){
+                    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST)
+                } else {
+                    Toast.makeText(this, getString(R.string.open_setting), Toast.LENGTH_SHORT)
+                        .show()
+                    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        addCategory(Intent.CATEGORY_DEFAULT)
+                        data = Uri.parse("package:$packageName")
+                    }.run(::startActivity)
+                    finish()
+                }
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
