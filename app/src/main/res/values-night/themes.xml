@@ -12,8 +12,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-        <item name="android:windowActivityTransitions">true</item>
-        <item name="android:windowSharedElementEnterTransition">@android:transition/explode</item>
-        <item name="android:windowSharedElementExitTransition">@android:transition/explode</item>
+<!--        <item name="android:windowContentTransitions">true</item>-->
+<!--        <item name="android:windowSharedElementEnterTransition">@android:transition/slide_right</item>-->
+<!--        <item name="android:windowSharedElementExitTransition">@android:transition/slide_left</item>-->
     </style>
 </resources>

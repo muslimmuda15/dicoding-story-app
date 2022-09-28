@@ -2,8 +2,6 @@ package com.rachmad.training.dicodingstoryapp.webservice
 
 import com.rachmad.training.dicodingstoryapp.model.LoginRequestData
 import com.rachmad.training.dicodingstoryapp.model.BaseResponseData
-import com.rachmad.training.dicodingstoryapp.model.CreateStoryRequestData
-import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*

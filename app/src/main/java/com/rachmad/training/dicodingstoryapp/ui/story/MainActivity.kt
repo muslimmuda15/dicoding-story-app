@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -172,11 +173,10 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onClick(mainContainer: RelativeLayout, data: StoryData) {
-        startActivity(StoryDetailsActivity.instance(this, data), ActivityOptionsCompat.makeSceneTransitionAnimation(
-            this,
-            mainContainer, "story_item",
-        ).toBundle())
+    override fun onClick(options: ActivityOptionsCompat, data: StoryData) {
+        startActivity(
+            StoryDetailsActivity.instance(this, data),
+            options.toBundle())
     }
 
     private fun reloadActivity(lang: String){
@@ -201,7 +201,7 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
 
 interface OnSelectedStory{
     fun onClick(
-        mainContainer: RelativeLayout,
+        options: ActivityOptionsCompat,
         data: StoryData
     )
 }

@@ -13,6 +13,9 @@ fun View.visible(){
     visibility = View.VISIBLE
 }
 
+val View.isVisible
+    get(): Boolean = visibility == View.VISIBLE
+
 fun View.gone(){
     visibility = View.GONE
 }
