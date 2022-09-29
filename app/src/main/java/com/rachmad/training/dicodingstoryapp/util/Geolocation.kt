@@ -28,13 +28,13 @@ class Geolocation {
     private var addresses: List<Address>? = null
 
     fun setLocation(lat: Double, long: Double) {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.T) {
-//            geocoder.getFromLocation(lat, long, 1) {
-//                addresses = it
-//            }
-//        } else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            geocoder.getFromLocation(lat, long, 1) {
+                addresses = it
+            }
+        } else {
             addresses = geocoder.getFromLocation(lat, long, 1)
-//        }
+        }
     }
 
     val address: String?

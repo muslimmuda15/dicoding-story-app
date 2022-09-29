@@ -6,8 +6,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -115,7 +113,10 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
         }
 
         layout.addStory.setOnClickListener {
-            activityResult.launch(NewStoryActivity.instance(this))
+            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this
+            )
+            activityResult.launch(NewStoryActivity.instance(this), options)
         }
     }
 

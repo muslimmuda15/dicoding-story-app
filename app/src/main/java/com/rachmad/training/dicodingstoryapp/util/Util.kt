@@ -1,14 +1,16 @@
 package com.rachmad.training.dicodingstoryapp.util
 
-import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.Intent
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.Image
 import android.net.Uri
+import android.os.Build
+import android.os.Parcelable
 import android.provider.MediaStore
 import android.util.Patterns
 import com.google.gson.Gson
@@ -32,11 +34,25 @@ fun errorResponseData(body: ResponseBody?): BaseResponseData {
     return Gson().fromJson(body?.charStream(), type)
 }
 
-fun <T : Serializable?> getSerializable(activity: Activity, name: String, clazz: Class<T>): T {
-//    return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-//        activity.intent.getSerializableExtra(name, clazz)!!
-//    else
-        return activity.intent.getSerializableExtra(name) as T
+fun <T : Serializable?> getSerializable(intent: Intent?, name: String, clazz: Class<T>): T {
+    return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        intent?.getSerializableExtra(name, clazz)!!
+    else
+        return intent?.getSerializableExtra(name) as T
+}
+
+fun <T : Parcelable?> getParcelableArrayListExtra(intent: Intent?, name: String, clazz: Class<T>): ArrayList<T>? {
+    return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        intent?.getParcelableArrayListExtra(name, clazz)
+    else
+        return intent?.getParcelableArrayListExtra(name)
+}
+
+fun <T : Parcelable?> getParcelableExtra(intent: Intent?, name: String?, clazz: Class<T>): T? {
+    return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        intent?.getParcelableExtra(name, clazz)!!
+    else
+        return intent?.getParcelableExtra(name) as T?
 }
 
 fun rotateImage(bytes: ByteArray): ByteArray{
@@ -85,21 +101,21 @@ fun Image.save(context: Context, result: (Boolean) -> Unit) {
 fun getPath(context: Context, uri: Uri): String? {
     val projection = arrayOf(MediaStore.Images.Media.DATA)
     val cursor: Cursor =
-        context.getContentResolver().query(uri, projection, null, null, null) ?: return null
-    val column_index: Int = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        context.contentResolver.query(uri, projection, null, null, null) ?: return null
+    val columnIndex: Int = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
     cursor.moveToFirst()
-    val s: String = cursor.getString(column_index)
+    val s: String = cursor.getString(columnIndex)
     cursor.close()
     return s
 }
 
 fun loadFile(context: Context): File? {
-    try {
+    return try {
         val cw = ContextWrapper(context)
         val dir = cw.getDir(cameraFileName, Context.MODE_PRIVATE)
-        return File(dir, "image.jpg")
+        File(dir, "image.jpg")
     } catch(e: Exception){
-        return null
+        null
     }
 }
 

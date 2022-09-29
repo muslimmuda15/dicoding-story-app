@@ -25,7 +25,6 @@ import com.rachmad.training.dicodingstoryapp.util.ui.visible
 import androidx.core.util.Pair
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.signature.ObjectKey
 import com.rachmad.training.dicodingstoryapp.util.ui.isVisible
 
 class StoryItemRecyclerViewAdapter(val context: Context, private val listener: OnSelectedStory): RecyclerView.Adapter<StoryItemRecyclerViewAdapter.StoryViewHolder>() {

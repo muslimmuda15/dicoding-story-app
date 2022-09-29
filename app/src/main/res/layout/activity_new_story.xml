@@ -97,14 +97,25 @@
 
                 <Button
                     android:id="@+id/take_image"
+                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/image"
                     android:gravity="start|center_vertical"
                     android:text="@string/camera_image"
                     android:textColor="@color/black"
-                    app:icon="@drawable/ic_base_camera_image_24"
-                    style="?attr/materialButtonOutlinedStyle"/>
+                    app:icon="@drawable/ic_base_camera_image_24" />
+
+                <TextView
+                    android:id="@+id/error_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/take_image"
+                    android:paddingHorizontal="@dimen/margin_padding_size_medium"
+                    android:textColor="@color/md_red_500"
+                    android:textSize="@dimen/text_size_micro"
+                    android:visibility="gone"
+                    android:text="@string/fill_image"/>
             </RelativeLayout>
         </ScrollView>
 

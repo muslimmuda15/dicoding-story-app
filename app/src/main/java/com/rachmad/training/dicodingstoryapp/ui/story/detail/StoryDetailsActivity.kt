@@ -18,7 +18,7 @@ import com.rachmad.training.dicodingstoryapp.util.ui.visible
 
 class StoryDetailsActivity: BaseActivity<ActivityStoryDetailsBinding>() {
     private lateinit var storyData: StoryData
-    private lateinit var geolocation: Geolocation
+    private lateinit var geoLocation: Geolocation
     private var timeUtil: TimeUtil = TimeUtil(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,8 +28,8 @@ class StoryDetailsActivity: BaseActivity<ActivityStoryDetailsBinding>() {
 
     @SuppressLint("SetTextI18n")
     private fun init(){
-        geolocation = Geolocation(this)
-        storyData = getSerializable(this, STORY_INTENT_DATA, StoryData::class.java)
+        geoLocation = Geolocation(this)
+        storyData = getSerializable(this.intent, STORY_INTENT_DATA, StoryData::class.java)
 
         with(layout){
             layout.description.movementMethod = ScrollingMovementMethod.getInstance()
@@ -43,9 +43,9 @@ class StoryDetailsActivity: BaseActivity<ActivityStoryDetailsBinding>() {
             try {
                 if (storyData.lat != null && storyData.lon != null) {
                     location.visible()
-                    geolocation.setLocation(storyData.lat!!, storyData.lon!!)
-                    location.text = geolocation.address ?: geolocation.city ?: geolocation.state
-                            ?: geolocation.country ?: getString(
+                    geoLocation.setLocation(storyData.lat!!, storyData.lon!!)
+                    location.text = geoLocation.address ?: geoLocation.city ?: geoLocation.state
+                            ?: geoLocation.country ?: geoLocation.postalCode ?: geoLocation.knownName ?: getString(
                         R.string.unknown_location
                     )
                 } else {

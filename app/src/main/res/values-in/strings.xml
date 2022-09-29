@@ -57,4 +57,5 @@
     <string name="unknown_load_photo">Terjadi kesalahan saat memuat foto</string>
     <string name="post_story">POSTING</string>
     <string name="fill_image">Isi berkas berupa gambar dahulu</string>
+    <string name="empty_description">Mohon isi deskripsi</string>
 </resources>

@@ -25,6 +25,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.rachmad.training.dicodingstoryapp.R
+import com.rachmad.training.dicodingstoryapp.util.getParcelableArrayListExtra
 import com.rachmad.training.dicodingstoryapp.util.save
 import com.rachmad.training.dicodingstoryapp.util.ui.gone
 import com.sangcomz.fishbun.FishBun
@@ -56,7 +57,7 @@ class CameraActivity: BaseActivity<ActivityCameraBinding>() {
             val resultCode = result.resultCode
             val data = result.data
             if(resultCode == RESULT_OK){
-                val imagePath = data?.getParcelableArrayListExtra<Uri>(FishBun.INTENT_PATH)
+                val imagePath: ArrayList<Uri>? = getParcelableArrayListExtra(data, FishBun.INTENT_PATH, Uri::class.java)
                 setResult(GALLERY_RESULT_CODE, Intent().apply {
                     putExtra(GALLERY_RESULT, imagePath?.get(0))
                 })
@@ -72,12 +73,12 @@ class CameraActivity: BaseActivity<ActivityCameraBinding>() {
             takeImage()
         }
         layout.cameraSelector.setOnClickListener {
-            when(cameraSelector){
+            cameraSelector = when(cameraSelector){
                 CameraSelector.DEFAULT_BACK_CAMERA -> {
-                    cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
+                    CameraSelector.DEFAULT_FRONT_CAMERA
                 }
                 else -> {
-                    cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+                    CameraSelector.DEFAULT_BACK_CAMERA
                 }
             }
             startCamera()
@@ -127,7 +128,7 @@ class CameraActivity: BaseActivity<ActivityCameraBinding>() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+    private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     private fun startCamera(){
         cameraProviderFuture.addListener({
             cameraProvider = cameraProvider ?: cameraProviderFuture.get()

@@ -57,4 +57,5 @@
     <string name="unknown_load_photo">Something went wrong when load the photo</string>
     <string name="post_story">POSTING</string>
     <string name="fill_image">Fill document contain image</string>
+    <string name="empty_description">Fill the description</string>
 </resources>

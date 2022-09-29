@@ -8,7 +8,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -87,7 +86,7 @@ class NewStoryActivity: BaseActivity<ActivityNewStoryBinding>() {
                     }
                 }
                 GALLERY_RESULT_CODE -> {
-                    val resultUri = result.data?.getParcelableExtra<Uri>(GALLERY_RESULT)
+                    val resultUri = getParcelableExtra(result.data, GALLERY_RESULT, Uri::class.java)
                     file = File(getPath(this, resultUri!!))
                     bitmap?.recycle()
                     Glide.with(layout.image)
@@ -113,7 +112,7 @@ class NewStoryActivity: BaseActivity<ActivityNewStoryBinding>() {
 
                         geoLocation.setLocation(it.latitude, it.longitude)
                         location.text = geoLocation.address ?: geoLocation.city ?: geoLocation.state
-                                ?: geoLocation.country ?: getString(
+                                ?: geoLocation.country ?: geoLocation.postalCode ?: geoLocation.knownName ?: getString(
                             R.string.unknown_location
                         )
                         loading.gone()
@@ -131,7 +130,19 @@ class NewStoryActivity: BaseActivity<ActivityNewStoryBinding>() {
             }
 
             posting.setOnClickListener {
-                if(file != null) {
+                errorImage.gone()
+                if(description.text.toString().isBlank()){
+                    descriptionLayout.isErrorEnabled = true
+                    descriptionLayout.error = getString(R.string.empty_description)
+                } else {
+                    descriptionLayout.isErrorEnabled = false
+                }
+
+                if(file == null){
+                    takeImage.error = getString(R.string.fill_image)
+                    errorImage.visible()
+                }
+                if(description.text.toString().isNotBlank() && file != null) {
                     val userToken: String? = if(fullName.text.toString() == getString(R.string.guest))
                         null
                     else
@@ -169,8 +180,6 @@ class NewStoryActivity: BaseActivity<ActivityNewStoryBinding>() {
                         Timber.i(it?.message)
                         finish()
                     })
-                } else {
-                    Toast.makeText(this@NewStoryActivity, getString(R.string.fill_image), Toast.LENGTH_SHORT).show()
                 }
             }
         }
