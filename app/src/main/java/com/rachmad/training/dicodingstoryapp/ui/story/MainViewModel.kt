@@ -6,13 +6,14 @@ import androidx.lifecycle.asLiveData
 import com.rachmad.training.dicodingstoryapp.model.BaseResponseData
 import com.rachmad.training.dicodingstoryapp.model.LoginData
 import com.rachmad.training.dicodingstoryapp.repository.StoryRepository
-import com.rachmad.training.dicodingstoryapp.repository.UserPreference
+import com.rachmad.training.dicodingstoryapp.sql.access.LoginAccess
 import kotlinx.coroutines.flow.first
 
-class MainViewModel(private val pref: UserPreference): ViewModel() {
-    fun getUserLiveData(): LiveData<LoginData> = pref.getUser().asLiveData()
-    suspend fun getUser(): LoginData = pref.getUser().first()
-    suspend fun logout() = pref.logout()
+class MainViewModel: ViewModel() {
+    val loginAccess = LoginAccess()
+    fun getUserLiveData(): LiveData<LoginData?> = loginAccess.getAccountData()
+    val getToken: String? = loginAccess.getToken()
+    fun logout() = loginAccess.deleteLogin()
 
     private val storyRepository = StoryRepository()
 

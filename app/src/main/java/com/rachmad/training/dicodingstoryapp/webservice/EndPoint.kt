@@ -6,6 +6,7 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
+const val ITEM_SIZE = 20
 interface EndPoint {
     @POST("register")
     fun register(
@@ -40,7 +41,7 @@ interface EndPoint {
     fun getAllStories(
         @Header("Authorization") token: String,
         @Query("page") page: Int? = 1,
-        @Query("size") size: Int? = 50,
+        @Query("size") size: Int? = ITEM_SIZE,
         @Query("location") location: Int = 0,
     ): Call<BaseResponseData>
 }

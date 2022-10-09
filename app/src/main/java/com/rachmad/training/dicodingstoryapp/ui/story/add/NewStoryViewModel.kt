@@ -7,12 +7,13 @@ import com.rachmad.training.dicodingstoryapp.model.BaseResponseData
 import com.rachmad.training.dicodingstoryapp.model.CreateStoryRequestData
 import com.rachmad.training.dicodingstoryapp.model.LoginData
 import com.rachmad.training.dicodingstoryapp.repository.StoryRepository
-import com.rachmad.training.dicodingstoryapp.repository.UserPreference
+import com.rachmad.training.dicodingstoryapp.sql.access.LoginAccess
 
-class NewStoryViewModel(private val pref: UserPreference): ViewModel() {
+class NewStoryViewModel: ViewModel() {
+    private val loginAccess = LoginAccess()
     private val storyRepository = StoryRepository()
 
-    fun getUserLiveData(): LiveData<LoginData> = pref.getUser().asLiveData()
+    fun getUserLiveData(): LiveData<LoginData?> = loginAccess.getAccountData()
     fun addStory(
         token: String?,
         requestData: CreateStoryRequestData,

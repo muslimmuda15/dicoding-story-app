@@ -24,18 +24,39 @@
         android:paddingBottom="@dimen/margin_padding_size_medium"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/location"
+        <LinearLayout
+            android:id="@+id/location_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxHeight="@dimen/max_height_description"
-            android:layout_marginHorizontal="@dimen/margin_padding_size_medium"
-            android:textColor="@color/force_white"
-            app:drawableStartCompat="@drawable/ic_baseline_location_on_24"
-            android:drawablePadding="@dimen/margin_padding_size_default"
-            android:transitionName="location"
-            android:visibility="gone"
-            tools:text="Location" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxHeight="@dimen/max_height_description"
+                android:layout_marginHorizontal="@dimen/margin_padding_size_medium"
+                android:textColor="@color/force_white"
+                app:drawableStartCompat="@drawable/ic_baseline_location_on_24"
+                android:drawablePadding="@dimen/margin_padding_size_default"
+                android:transitionName="location"
+                android:layout_marginVertical="@dimen/margin_padding_size_default"
+                android:layout_weight="1"
+                android:visibility="visible"
+                tools:text="Location" />
+
+            <TextView
+                android:id="@+id/view_map"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/md_blue_500"
+                android:layout_marginHorizontal="@dimen/margin_padding_size_medium"
+                android:layout_marginVertical="@dimen/margin_padding_size_default"
+                android:foreground="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/ic_baseline_chevron_right_24"/>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/full_name"

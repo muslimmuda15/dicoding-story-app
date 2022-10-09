@@ -5,11 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
+import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.google.android.gms.maps.model.LatLng
 import com.rachmad.training.dicodingstoryapp.BaseActivity
 import com.rachmad.training.dicodingstoryapp.R
 import com.rachmad.training.dicodingstoryapp.databinding.ActivityStoryDetailsBinding
 import com.rachmad.training.dicodingstoryapp.model.StoryData
+import com.rachmad.training.dicodingstoryapp.ui.story.detail.StoryDetailMapsActivity.Companion.LATLONG
 import com.rachmad.training.dicodingstoryapp.util.Geolocation
 import com.rachmad.training.dicodingstoryapp.util.TimeUtil
 import com.rachmad.training.dicodingstoryapp.util.getSerializable
@@ -24,6 +27,7 @@ class StoryDetailsActivity: BaseActivity<ActivityStoryDetailsBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         init()
+        buttonListener()
     }
 
     @SuppressLint("SetTextI18n")
@@ -42,22 +46,35 @@ class StoryDetailsActivity: BaseActivity<ActivityStoryDetailsBinding>() {
 
             try {
                 if (storyData.lat != null && storyData.lon != null) {
-                    location.visible()
+                    locationLayout.visible()
                     geoLocation.setLocation(storyData.lat!!, storyData.lon!!)
-                    location.text = geoLocation.address ?: geoLocation.city ?: geoLocation.state
-                            ?: geoLocation.country ?: geoLocation.postalCode ?: geoLocation.knownName ?: getString(
-                        R.string.unknown_location
-                    )
+
+                    location.text = geoLocation.getGlobalLocation()
                 } else {
-                    location.gone()
+                    locationLayout.gone()
                 }
             } catch (e: Exception){
-                location.gone()
+                locationLayout.gone()
             }
 
             Glide.with(photo)
                 .load(storyData.photoUrl)
                 .into(photo)
+        }
+    }
+
+    private fun buttonListener(){
+        layout.viewMap.setOnClickListener {
+            if(storyData.lat != null && storyData.lon != null) {
+                startActivity(
+                    StoryDetailMapsActivity.instance(
+                        this,
+                        LatLng(storyData.lat!!, storyData.lon!!)
+                    )
+                )
+            } else {
+                Toast.makeText(this, getString(R.string.coordinate_failed), Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

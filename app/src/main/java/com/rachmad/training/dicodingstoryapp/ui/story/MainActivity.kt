@@ -9,12 +9,9 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityOptionsCompat
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rachmad.training.dicodingstoryapp.App
@@ -22,32 +19,24 @@ import com.rachmad.training.dicodingstoryapp.BaseActivity
 import com.rachmad.training.dicodingstoryapp.R
 import com.rachmad.training.dicodingstoryapp.databinding.ActivityMainBinding
 import com.rachmad.training.dicodingstoryapp.model.StoryData
-import com.rachmad.training.dicodingstoryapp.repository.UserPreference
 import com.rachmad.training.dicodingstoryapp.ui.login.LoginActivity
 import com.rachmad.training.dicodingstoryapp.ui.story.add.NewStoryActivity
 import com.rachmad.training.dicodingstoryapp.ui.story.detail.StoryDetailsActivity
 import com.rachmad.training.dicodingstoryapp.util.LocaleHelper
-import com.rachmad.training.dicodingstoryapp.util.ViewModelFactory
 import com.rachmad.training.dicodingstoryapp.util.ui.gone
 import com.rachmad.training.dicodingstoryapp.util.ui.visible
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user")
-
 class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
-    /**
-     * Kenapa pake shared preference padahal sudah ada data store?
-     * Karena saya perlu penyimpanan data tanpa ada ikatan lifecycle dan view model
-     * Untuk keperluan ganti bahasa tanpa secara langsung in-app
-     */
     @Inject lateinit var sp: SharedPreferences
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModels()
     private lateinit var storyAdapter: StoryItemRecyclerViewAdapter
     private lateinit var alertDialog: AlertDialog
 
     private lateinit var activityResult: ActivityResultLauncher<Intent>
+    private var isAuth = true
 
     init {
         App.appComponent.inject(this)
@@ -68,10 +57,11 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
                 NewStoryActivity.RESULT_REQUEST_STORY -> {
                     val isSuccess = result.data?.getBooleanExtra(NewStoryActivity.IS_STORY_SUCCESS, false) ?: false
                     if(isSuccess) {
-                        lifecycleScope.launch {
-                            viewModel.getUser().token?.let {
-                                requestNetwork(it)
-                            }
+                        if(!viewModel.getToken.isNullOrBlank()) {
+                            requestNetwork(viewModel.getToken!!)
+                        } else {
+                            isAuth = false
+                            viewModel.logout()
                         }
                     }
                 }
@@ -105,28 +95,41 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
 
     private fun listener(){
         layout.refresh.setOnRefreshListener {
-            lifecycleScope.launch {
-                viewModel.getUser().token?.let {
-                    requestNetwork(it)
-                }
+            if(!viewModel.getToken.isNullOrBlank()) {
+                requestNetwork(viewModel.getToken!!)
+            } else {
+                isAuth = false
+                viewModel.logout()
             }
         }
 
         layout.addStory.setOnClickListener {
-            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                this
-            )
+            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this)
             activityResult.launch(NewStoryActivity.instance(this), options)
         }
     }
 
     private fun observer() {
+        /**
+         * Authentication
+         * Request network when login data is found
+         * Logout when account data is empty
+         */
         viewModel.getUserLiveData().observe(this) {
-            if (!it.userId.isNullOrBlank() && !it.name.isNullOrBlank() && !it.token.isNullOrBlank()) {
-                with(layout) {
-                    loading.visible()
-                    requestNetwork(it.token!!)
+            it?.let {
+                if (it.userId.isNotBlank() && !it.name.isNullOrBlank() && !it.token.isNullOrBlank()) {
+                    with(layout) {
+                        isAuth = true
+                        loading.visible()
+                        requestNetwork(it.token!!)
+                    }
                 }
+            } ?: run {
+                if(isAuth){
+                    Toast.makeText(this, getString(R.string.not_auth_message), Toast.LENGTH_SHORT).show()
+                }
+                startActivity(LoginActivity.instance(this@MainActivity))
+                finish()
             }
         }
     }
@@ -137,7 +140,6 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
             storyAdapter = StoryItemRecyclerViewAdapter(this@MainActivity, this@MainActivity)
             adapter = storyAdapter
         }
-        viewModel = ViewModelProvider(this, ViewModelFactory(UserPreference.getInstance(dataStore)))[MainViewModel::class.java]
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -154,9 +156,8 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
                     .setCancelable(false)
                     .setPositiveButton(android.R.string.ok) { _, _ ->
                         lifecycleScope.launch {
+                            isAuth = false
                             viewModel.logout()
-                            startActivity(LoginActivity.instance(this@MainActivity))
-                            finish()
                         }
                     }
                     .setNegativeButton(android.R.string.cancel) { _, _ ->

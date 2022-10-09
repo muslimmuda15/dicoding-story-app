@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -21,7 +22,6 @@ import com.rachmad.training.dicodingstoryapp.BaseActivity
 import com.rachmad.training.dicodingstoryapp.R
 import com.rachmad.training.dicodingstoryapp.databinding.ActivityNewStoryBinding
 import com.rachmad.training.dicodingstoryapp.model.CreateStoryRequestData
-import com.rachmad.training.dicodingstoryapp.repository.UserPreference
 import com.rachmad.training.dicodingstoryapp.ui.story.add.CameraActivity.Companion.CAMERA_RESULT_CODE
 import com.rachmad.training.dicodingstoryapp.ui.story.add.CameraActivity.Companion.GALLERY_RESULT
 import com.rachmad.training.dicodingstoryapp.ui.story.add.CameraActivity.Companion.GALLERY_RESULT_CODE
@@ -32,10 +32,8 @@ import com.rachmad.training.dicodingstoryapp.util.ui.visible
 import timber.log.Timber
 import java.io.File
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user")
-
 class NewStoryActivity: BaseActivity<ActivityNewStoryBinding>() {
-    private lateinit var viewModel: NewStoryViewModel
+    private val viewModel: NewStoryViewModel by viewModels()
     private lateinit var geoLocation: Geolocation
     private var bitmap: Bitmap? = null
     private var token: String? = null
@@ -112,7 +110,7 @@ class NewStoryActivity: BaseActivity<ActivityNewStoryBinding>() {
 
                         geoLocation.setLocation(it.latitude, it.longitude)
                         location.text = geoLocation.address ?: geoLocation.city ?: geoLocation.state
-                                ?: geoLocation.country ?: geoLocation.postalCode ?: geoLocation.knownName ?: getString(
+                                ?: geoLocation.country ?: getString(
                             R.string.unknown_location
                         )
                         loading.gone()
@@ -186,7 +184,6 @@ class NewStoryActivity: BaseActivity<ActivityNewStoryBinding>() {
     }
 
     private fun init(){
-        viewModel = ViewModelProvider(this, ViewModelFactory(UserPreference.getInstance(dataStore)))[NewStoryViewModel::class.java]
         geoLocation = Geolocation(this)
 
         setSupportActionBar(layout.toolbar)
@@ -197,12 +194,16 @@ class NewStoryActivity: BaseActivity<ActivityNewStoryBinding>() {
 
     private fun observer(){
         viewModel.getUserLiveData().observe(this){
-            layout.loading.gone()
-            token = it.token
-            val items = arrayOf(it.name, getString(R.string.guest))
-            layout.fullName.apply {
-                setText(it.name)
-                setSimpleItems(items)
+            it?.let {
+                layout.loading.gone()
+                token = it.token
+                val items = arrayOf(it.name, getString(R.string.guest))
+                layout.fullName.apply {
+                    setText(it.name)
+                    setSimpleItems(items)
+                }
+            } ?: run {
+
             }
         }
     }

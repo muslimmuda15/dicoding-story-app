@@ -28,7 +28,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.rachmad.training.dicodingstoryapp.util.ui.isVisible
 
 class StoryItemRecyclerViewAdapter(val context: Context, private val listener: OnSelectedStory): RecyclerView.Adapter<StoryItemRecyclerViewAdapter.StoryViewHolder>() {
-    private var geolocation: Geolocation = Geolocation(context)
+    private var geoLocation: Geolocation = Geolocation(context)
     private var timeUtil: TimeUtil = TimeUtil(context)
 
     private val values = ArrayList<StoryData>()
@@ -72,8 +72,9 @@ class StoryItemRecyclerViewAdapter(val context: Context, private val listener: O
             try {
                 if (item.lat != null && item.lon != null) {
                     location.visible()
-                    geolocation.setLocation(item.lat!!, item.lon!!)
-                    location.text = geolocation.city ?: geolocation.state ?: geolocation.country ?: context.getString(R.string.unknown_location)
+                    geoLocation.setLocation(item.lat!!, item.lon!!)
+//                    location.text = geolocation.city ?: geolocation.state ?: geolocation.country ?: context.getString(R.string.unknown_location)
+                    location.text = geoLocation.getGlobalLocation()
                 } else {
                     location.gone()
                 }

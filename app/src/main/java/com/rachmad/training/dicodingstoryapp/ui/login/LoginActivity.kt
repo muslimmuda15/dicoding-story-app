@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -15,10 +16,8 @@ import com.rachmad.training.dicodingstoryapp.R
 import com.rachmad.training.dicodingstoryapp.databinding.ActivityLoginBinding
 import com.rachmad.training.dicodingstoryapp.BaseActivity
 import com.rachmad.training.dicodingstoryapp.model.LoginRequestData
-import com.rachmad.training.dicodingstoryapp.util.ViewModelFactory
 import com.rachmad.training.dicodingstoryapp.util.ui.createLinks
 import com.rachmad.training.dicodingstoryapp.util.ui.hideKeyboard
-import com.rachmad.training.dicodingstoryapp.repository.UserPreference
 import com.rachmad.training.dicodingstoryapp.ui.story.MainActivity
 import com.rachmad.training.dicodingstoryapp.ui.register.RegisterActivity
 import com.rachmad.training.dicodingstoryapp.util.LocaleHelper
@@ -28,11 +27,9 @@ import com.rachmad.training.dicodingstoryapp.util.ui.visible
 import java.util.*
 import javax.inject.Inject
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user")
-
 class LoginActivity: BaseActivity<ActivityLoginBinding>() {
     @Inject lateinit var sp: SharedPreferences
-    private lateinit var viewModel: LoginViewModel
+    private val viewModel: LoginViewModel by viewModels()
 
     init {
         App.appComponent.inject(this)
@@ -41,22 +38,19 @@ class LoginActivity: BaseActivity<ActivityLoginBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        init()
         listener()
         observer()
     }
 
     private fun observer(){
         viewModel.getUser().observe(this) {
-            if (!it.userId.isNullOrBlank() && !it.name.isNullOrBlank() && !it.token.isNullOrBlank()) {
-                startActivity(MainActivity.instance(this))
-                finish()
+            it?.let {
+                if (!it.userId.isBlank() && !it.name.isNullOrBlank() && !it.token.isNullOrBlank()) {
+                    startActivity(MainActivity.instance(this))
+                    finish()
+                }
             }
         }
-    }
-
-    private fun init() {
-        viewModel = ViewModelProvider(this, ViewModelFactory(UserPreference.getInstance(dataStore)))[LoginViewModel::class.java]
     }
 
     private fun listener(){

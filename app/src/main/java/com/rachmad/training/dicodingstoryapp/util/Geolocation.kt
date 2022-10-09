@@ -10,6 +10,7 @@ import android.location.Location
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
+import com.rachmad.training.dicodingstoryapp.R
 import java.lang.Exception
 import java.util.*
 
@@ -44,12 +45,18 @@ class Geolocation {
             null
         }
 
+    val isCity: Boolean
+        get() = !addresses?.get(0)?.locality.isNullOrBlank()
+
     val city: String?
         get() = try {
             addresses?.get(0)?.locality
         } catch (e: Exception) {
             null
         }
+
+    val isState: Boolean
+        get() = !addresses?.get(0)?.adminArea.isNullOrBlank()
 
     val state: String?
         get() = try {
@@ -58,6 +65,9 @@ class Geolocation {
             null
         }
 
+    val isCountry: Boolean
+        get() = !addresses?.get(0)?.countryName.isNullOrBlank()
+
     val country: String?
         get() = try {
             addresses?.get(0)?.countryName
@@ -65,19 +75,20 @@ class Geolocation {
             null
         }
 
-    val postalCode: String?
-        get() = try {
-            addresses?.get(0)?.postalCode
-        } catch (e: Exception) {
-            null
+    fun getGlobalLocation(): String {
+        var place = ""
+
+        if(isState){
+            place += state + ", "
+        }
+        if(isCountry){
+            place += country
+        } else {
+            place = activity.getString(R.string.unknown_location)
         }
 
-    val knownName: String?
-        get() = try {
-            addresses?.get(0)?.featureName
-        } catch (e: Exception) {
-            null
-        }
+        return place
+    }
 
     private var fusedLocation: FusedLocationProviderClient? = null
     private var locationRequest: LocationRequest? = null

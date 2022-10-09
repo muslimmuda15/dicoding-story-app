@@ -6,36 +6,24 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
 import com.rachmad.training.dicodingstoryapp.R
 import com.rachmad.training.dicodingstoryapp.databinding.ActivityRegisterBinding
 import com.rachmad.training.dicodingstoryapp.BaseActivity
 import com.rachmad.training.dicodingstoryapp.model.LoginRequestData
-import com.rachmad.training.dicodingstoryapp.repository.UserPreference
-import com.rachmad.training.dicodingstoryapp.util.ViewModelFactory
 import com.rachmad.training.dicodingstoryapp.util.isValidEmail
 import com.rachmad.training.dicodingstoryapp.util.ui.createLinks
 import com.rachmad.training.dicodingstoryapp.util.ui.gone
 import com.rachmad.training.dicodingstoryapp.util.ui.visible
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user")
-
 class RegisterActivity : BaseActivity<ActivityRegisterBinding>() {
-    private lateinit var viewModel: RegisterViewModel
+    private val viewModel: RegisterViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        init()
         initView()
         listener()
-    }
-
-    private fun init(){
-        viewModel = ViewModelProvider(this, ViewModelFactory(UserPreference.getInstance(dataStore)))[RegisterViewModel::class.java]
     }
 
     private fun initView(){

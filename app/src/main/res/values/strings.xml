@@ -58,4 +58,6 @@
     <string name="post_story">POSTING</string>
     <string name="fill_image">Fill document contain image</string>
     <string name="empty_description">Fill the description</string>
+    <string name="coordinate_failed">Cannot get coordinate location</string>
+    <string name="not_auth_message">Anda sedang tidak login, mohon unuk login terlebih dahulu</string>
 </resources>

@@ -6,17 +6,14 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.rachmad.training.dicodingstoryapp.model.*
 import com.rachmad.training.dicodingstoryapp.repository.AuthRepository
-import com.rachmad.training.dicodingstoryapp.repository.UserPreference
+import com.rachmad.training.dicodingstoryapp.sql.access.LoginAccess
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val pref: UserPreference): ViewModel() {
+class LoginViewModel: ViewModel() {
     private val loginRepository = AuthRepository()
-    fun getUser(): LiveData<LoginData> = pref.getUser().asLiveData()
-    fun saveUser(user: LoginData){
-        viewModelScope.launch {
-            pref.login(user)
-        }
-    }
+    private val loginAccess = LoginAccess()
+    fun getUser(): LiveData<LoginData?> = loginAccess.getAccountData()
+    fun saveUser(user: LoginData) = loginAccess.insertLogin(user)
 
     fun login(user: LoginRequestData, success: (BaseResponseData?) -> Unit, error: (BaseResponseData?) -> Unit, failure: (Throwable?) -> Unit) = loginRepository.login(user, success, error, failure)
 }
