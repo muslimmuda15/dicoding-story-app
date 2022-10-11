@@ -2,6 +2,7 @@ package com.rachmad.training.dicodingstoryapp.di
 
 import com.rachmad.training.dicodingstoryapp.repository.AuthRepository
 import com.rachmad.training.dicodingstoryapp.repository.StoryRepository
+import com.rachmad.training.dicodingstoryapp.sql.ApiDatabaseMediator
 import com.rachmad.training.dicodingstoryapp.sql.StoryDatabase
 import com.rachmad.training.dicodingstoryapp.sql.access.LoginAccess
 import com.rachmad.training.dicodingstoryapp.sql.access.StoryAccess
@@ -21,4 +22,5 @@ interface ApplicationComponent {
     fun inject(cameraActivity: CameraActivity)
     fun inject(loginAccess: LoginAccess)
     fun inject(storyAccess: StoryAccess)
+    fun inject(apiDatabaseMediator: ApiDatabaseMediator)
 }

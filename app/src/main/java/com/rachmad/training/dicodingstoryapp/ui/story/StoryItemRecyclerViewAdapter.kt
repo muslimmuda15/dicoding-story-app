@@ -23,11 +23,13 @@ import com.rachmad.training.dicodingstoryapp.util.ui.CustomLoading
 import com.rachmad.training.dicodingstoryapp.util.ui.gone
 import com.rachmad.training.dicodingstoryapp.util.ui.visible
 import androidx.core.util.Pair
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.rachmad.training.dicodingstoryapp.util.ui.isVisible
 
-class StoryItemRecyclerViewAdapter(val context: Context, private val listener: OnSelectedStory): RecyclerView.Adapter<StoryItemRecyclerViewAdapter.StoryViewHolder>() {
+class StoryItemRecyclerViewAdapter(val context: Context, private val listener: OnSelectedStory): PagingDataAdapter<StoryData, StoryItemRecyclerViewAdapter.StoryViewHolder>(DIFF_CALLBACK) {
     private var geoLocation: Geolocation = Geolocation(context)
     private var timeUtil: TimeUtil = TimeUtil(context)
 
@@ -44,19 +46,6 @@ class StoryItemRecyclerViewAdapter(val context: Context, private val listener: O
             false
         )
     )
-
-    fun addData(list: ArrayList<StoryData>?){
-        if(values.size > 0) {
-            notifyItemRangeRemoved(0, values.size)
-            values.clear()
-        }
-        list?.let {
-            for (i in 0 until list.size) {
-                values.add(list[i])
-                notifyItemInserted(i)
-            }
-        }
-    }
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         with(holder) {
@@ -144,5 +133,17 @@ class StoryItemRecyclerViewAdapter(val context: Context, private val listener: O
         val description: TextView = binding.description
         val location: TextView = binding.location
         val loading: CustomLoading = binding.loading
+    }
+
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<StoryData>() {
+            override fun areItemsTheSame(oldItem: StoryData, newItem: StoryData): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(oldItem: StoryData, newItem: StoryData): Boolean {
+                return oldItem.id == newItem.id
+            }
+        }
     }
 }

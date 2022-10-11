@@ -1,8 +1,13 @@
 package com.rachmad.training.dicodingstoryapp.repository
 
+import androidx.lifecycle.LiveData
+import androidx.paging.*
 import com.rachmad.training.dicodingstoryapp.App
 import com.rachmad.training.dicodingstoryapp.model.BaseResponseData
 import com.rachmad.training.dicodingstoryapp.model.CreateStoryRequestData
+import com.rachmad.training.dicodingstoryapp.model.StoryData
+import com.rachmad.training.dicodingstoryapp.sql.ApiDatabaseMediator
+import com.rachmad.training.dicodingstoryapp.sql.StoryDatabase
 import com.rachmad.training.dicodingstoryapp.util.errorResponseData
 import com.rachmad.training.dicodingstoryapp.webservice.EndPoint
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -13,37 +18,24 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class StoryRepository {
+    @Inject lateinit var database: StoryDatabase
     @Inject lateinit var client: EndPoint
     init {
         App.appComponent.inject(this)
     }
 
-    fun stories(token: String, success: (BaseResponseData?) -> Unit, error: (BaseResponseData?) -> Unit, failure: (Throwable?) -> Unit){
-        val call = client.getAllStories(token = "Bearer $token")
-        call.enqueue(object: Callback<BaseResponseData> {
-            override fun onResponse(
-                call: Call<BaseResponseData>,
-                response: Response<BaseResponseData>
-            ) {
-                if(response.errorBody() == null)
-                    success(response.body())
-                else
-                    error(errorResponseData(response.errorBody()))
+    fun stories(): LiveData<PagingData<StoryData>>{
+        @OptIn(ExperimentalPagingApi::class)
+        return Pager(
+            config = PagingConfig(pageSize = 20),
+            remoteMediator = ApiDatabaseMediator(),
+            pagingSourceFactory = {
+                database.storyQuery().getListData()
             }
-
-            override fun onFailure(call: Call<BaseResponseData>, t: Throwable) {
-                failure(t)
-            }
-        })
+        ).liveData
     }
 
     fun addStory(token: String?, requestData: CreateStoryRequestData, success: (BaseResponseData?) -> Unit, error: (BaseResponseData?) -> Unit, failure: (Throwable?) -> Unit) {
-//        val file = requestData.photo.asRequestBody("image/jpeg".toMediaTypeOrNull())
-//        val image: MultipartBody.Part = MultipartBody.Part.createFormData(
-//            "photo",
-//            requestData.photo.name,
-//            file
-//        )
         val image = requestData.photo.asRequestBody("image/jpeg".toMediaTypeOrNull())
         val description = requestData.description
         val latitude = requestData.lat

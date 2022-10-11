@@ -58,7 +58,7 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
                     val isSuccess = result.data?.getBooleanExtra(NewStoryActivity.IS_STORY_SUCCESS, false) ?: false
                     if(isSuccess) {
                         if(!viewModel.getToken.isNullOrBlank()) {
-                            requestNetwork(viewModel.getToken!!)
+                            requestNetwork()
                         } else {
                             isAuth = false
                             viewModel.logout()
@@ -69,34 +69,18 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
         }
     }
 
-    private fun requestNetwork(token: String){
-        viewModel.stories(token, { responseData ->
-            layout.loading.gone()
-            layout.refresh.isRefreshing = false
-            storyAdapter.addData(responseData?.listStory)
-        }, { responseData ->
-            layout.loading.gone()
-            layout.refresh.isRefreshing = false
-            Toast.makeText(
-                this@MainActivity,
-                responseData?.message ?: getString(R.string.unknown_error),
-                Toast.LENGTH_SHORT
-            ).show()
-        }, { throwable ->
-            layout.loading.gone()
-            layout.refresh.isRefreshing = false
-            Toast.makeText(
-                this@MainActivity,
-                throwable?.message ?: getString(R.string.unknown_error),
-                Toast.LENGTH_SHORT
-            ).show()
-        })
+    private fun requestNetwork(){
+        val stories = viewModel.stories()
+        stories.removeObservers(this)
+        stories.observe(this) {
+            storyAdapter.submitData(lifecycle, it)
+        }
     }
 
     private fun listener(){
         layout.refresh.setOnRefreshListener {
             if(!viewModel.getToken.isNullOrBlank()) {
-                requestNetwork(viewModel.getToken!!)
+                requestNetwork()
             } else {
                 isAuth = false
                 viewModel.logout()
@@ -120,8 +104,8 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
                 if (it.userId.isNotBlank() && !it.name.isNullOrBlank() && !it.token.isNullOrBlank()) {
                     with(layout) {
                         isAuth = true
-                        loading.visible()
-                        requestNetwork(it.token!!)
+//                        loading.visible()
+                        requestNetwork()
                     }
                 }
             } ?: run {
@@ -138,7 +122,11 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
         layout.storyList.apply {
             layoutManager = LinearLayoutManager(context)
             storyAdapter = StoryItemRecyclerViewAdapter(this@MainActivity, this@MainActivity)
-            adapter = storyAdapter
+            adapter = storyAdapter.withLoadStateFooter(
+                footer = LoadingStateAdapter {
+                    storyAdapter.retry()
+                }
+            )
         }
     }
 

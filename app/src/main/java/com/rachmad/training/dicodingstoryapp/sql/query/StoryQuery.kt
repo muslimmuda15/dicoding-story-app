@@ -1,6 +1,7 @@
 package com.rachmad.training.dicodingstoryapp.sql.query
 
 import androidx.lifecycle.LiveData
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
@@ -9,8 +10,8 @@ import com.rachmad.training.dicodingstoryapp.model.StoryData
 
 @Dao
 interface StoryQuery {
-    @Query("select * from story limit :size offset :page")
-    fun getListData(size: Int, page: Int): LiveData<List<StoryData>>
+    @Query("select * from story")
+    fun getListData(): PagingSource<Int, StoryData>
 
     @Insert(onConflict = REPLACE)
     fun insertAllStory(stories: List<StoryData>)

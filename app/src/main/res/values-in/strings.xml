@@ -60,4 +60,5 @@
     <string name="empty_description">Mohon isi deskripsi</string>
     <string name="coordinate_failed">Gagal mendapatkan lokasi koordinat</string>
     <string name="not_auth_message">You are not authenticated, login first</string>
+    <string name="retry">coba lagi</string>
 </resources>

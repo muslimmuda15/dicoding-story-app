@@ -38,10 +38,10 @@ interface EndPoint {
     ): Call<BaseResponseData>
 
     @GET("stories")
-    fun getAllStories(
+    suspend fun getAllStories(
         @Header("Authorization") token: String,
         @Query("page") page: Int? = 1,
         @Query("size") size: Int? = ITEM_SIZE,
         @Query("location") location: Int = 0,
-    ): Call<BaseResponseData>
+    ): BaseResponseData?
 }
