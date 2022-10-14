@@ -13,6 +13,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityOptionsCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.map
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rachmad.training.dicodingstoryapp.App
 import com.rachmad.training.dicodingstoryapp.BaseActivity
@@ -26,6 +27,7 @@ import com.rachmad.training.dicodingstoryapp.util.LocaleHelper
 import com.rachmad.training.dicodingstoryapp.util.ui.gone
 import com.rachmad.training.dicodingstoryapp.util.ui.visible
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
@@ -70,10 +72,17 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
     }
 
     private fun requestNetwork(){
-        val stories = viewModel.stories()
-        stories.removeObservers(this)
-        stories.observe(this) {
-            storyAdapter.submitData(lifecycle, it)
+        viewModel.stories()?.let { stories ->
+            Timber.d("STORIES IS FOUND", stories)
+            stories.removeObservers(this)
+            stories.observe(this) {
+                it.map {
+                    Timber.d("STORIES DATA : " + it.toString())
+                }
+                storyAdapter.submitData(lifecycle, it)
+            }
+        } ?: run {
+            Timber.d("STORIES IS EMPTY")
         }
     }
 
@@ -122,11 +131,12 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
         layout.storyList.apply {
             layoutManager = LinearLayoutManager(context)
             storyAdapter = StoryItemRecyclerViewAdapter(this@MainActivity, this@MainActivity)
-            adapter = storyAdapter.withLoadStateFooter(
-                footer = LoadingStateAdapter {
-                    storyAdapter.retry()
-                }
-            )
+            adapter = storyAdapter
+                .withLoadStateFooter(
+                    footer = LoadingStateAdapter {
+                        storyAdapter.retry()
+                    }
+                )
         }
     }
 

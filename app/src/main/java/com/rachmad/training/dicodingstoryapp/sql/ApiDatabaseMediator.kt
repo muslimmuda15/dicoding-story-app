@@ -14,6 +14,7 @@ import com.rachmad.training.dicodingstoryapp.webservice.EndPoint
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import timber.log.Timber
 import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)
@@ -51,9 +52,9 @@ class ApiDatabaseMediator: RemoteMediator<Int, StoryData>() {
         try{
             var endPagination = true
 
-            database.loginQuery().getToken()?.let { token ->
+            database.loginQuery().getAccount()?.let { account ->
                 val responseData = api.getAllStories(
-                    token = token,
+                    token = "Bearer ${account.token}",
                     location = 1,
                     page = page,
                     size = state.config.pageSize
@@ -63,11 +64,13 @@ class ApiDatabaseMediator: RemoteMediator<Int, StoryData>() {
                 database.withTransaction {
                     responseData?.listStory?.let {
                         if (loadType == LoadType.REFRESH) {
+                            database.remoteKeyQuery().deleteRemoteKeys()
                             database.storyQuery().deleteAll()
                         }
                         val prevKey = if (page == 1) null else page - 1
                         val nextKey = if (endPagination) null else page + 1
                         val keys = it.map {
+                            it.accountId = account.userId
                             RemoteKeys(id = it.id, prevKey = prevKey, nextKey = nextKey)
                         }
                         database.remoteKeyQuery().insertAll(keys)
@@ -75,7 +78,8 @@ class ApiDatabaseMediator: RemoteMediator<Int, StoryData>() {
                     }
                 }
             } ?: run {
-                endPagination = false
+//                endPagination = true
+                return MediatorResult.Error(Throwable("No token"))
             }
 
             return MediatorResult.Success(endOfPaginationReached = endPagination)

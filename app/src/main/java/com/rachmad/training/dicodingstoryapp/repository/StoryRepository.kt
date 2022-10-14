@@ -24,15 +24,19 @@ class StoryRepository {
         App.appComponent.inject(this)
     }
 
-    fun stories(): LiveData<PagingData<StoryData>>{
-        @OptIn(ExperimentalPagingApi::class)
-        return Pager(
-            config = PagingConfig(pageSize = 20),
-            remoteMediator = ApiDatabaseMediator(),
-            pagingSourceFactory = {
-                database.storyQuery().getListData()
-            }
-        ).liveData
+    fun stories(): LiveData<PagingData<StoryData>>? {
+        database.loginQuery().getAccountId()?.let { id ->
+            @OptIn(ExperimentalPagingApi::class)
+            return Pager(
+                config = PagingConfig(pageSize = 20),
+                remoteMediator = ApiDatabaseMediator(),
+                pagingSourceFactory = {
+                    database.storyQuery().getListData(id)
+                }
+            ).liveData
+        } ?: run {
+            return null
+        }
     }
 
     fun addStory(token: String?, requestData: CreateStoryRequestData, success: (BaseResponseData?) -> Unit, error: (BaseResponseData?) -> Unit, failure: (Throwable?) -> Unit) {

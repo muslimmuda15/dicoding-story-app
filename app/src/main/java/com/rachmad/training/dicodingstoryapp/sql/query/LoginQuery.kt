@@ -16,8 +16,14 @@ interface LoginQuery {
     @Query("select * from account limit 1")
     fun getAccountData(): LiveData<LoginData?>
 
+    @Query("select * from account limit 1")
+    fun getAccount(): LoginData?
+
     @Query("select token from account limit 1")
     fun getToken(): String?
+
+    @Query("select user_id from account limit 1")
+    fun getAccountId(): String?
 
     @Query("delete from account")
     fun deleteData()

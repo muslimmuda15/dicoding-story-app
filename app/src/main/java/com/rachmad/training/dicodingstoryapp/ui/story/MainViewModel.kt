@@ -21,5 +21,5 @@ class MainViewModel: ViewModel() {
 
     private val storyRepository = StoryRepository()
 
-    fun stories(): LiveData<PagingData<StoryData>> = storyRepository.stories().cachedIn(viewModelScope)
+    fun stories(): LiveData<PagingData<StoryData>>? = storyRepository.stories()?.cachedIn(viewModelScope)
 }

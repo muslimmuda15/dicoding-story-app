@@ -49,76 +49,81 @@ class StoryItemRecyclerViewAdapter(val context: Context, private val listener: O
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         with(holder) {
-            val item = values[position]
+            if(values.size > 0) {
+                holder.root.visible()
+                val item = values[position]
 
-            loading.visible()
-            val timeStamp = item.createdAt?.let { timeUtil.toDateLong(it) } ?: run { 0L }
+                loading.visible()
+                val timeStamp = item.createdAt?.let { timeUtil.toDateLong(it) } ?: run { 0L }
 
-            fullName.text = item.name
-            date.text = timeUtil.toTime(timeStamp)
-            description.text = item.description
+                fullName.text = item.name
+                date.text = timeUtil.toTime(timeStamp)
+                description.text = item.description
 
-            try {
-                if (item.lat != null && item.lon != null) {
-                    location.visible()
-                    geoLocation.setLocation(item.lat!!, item.lon!!)
+                try {
+                    if (item.lat != null && item.lon != null) {
+                        location.visible()
+                        geoLocation.setLocation(item.lat!!, item.lon!!)
 //                    location.text = geolocation.city ?: geolocation.state ?: geolocation.country ?: context.getString(R.string.unknown_location)
-                    location.text = geoLocation.getGlobalLocation()
-                } else {
+                        location.text = geoLocation.getGlobalLocation()
+                    } else {
+                        location.gone()
+                    }
+                } catch (e: Exception) {
                     location.gone()
                 }
-            } catch (e: Exception){
-                location.gone()
-            }
 
-            Glide.with(photo)
-                .load(item.photoUrl)
-                .apply(requestOptions)
-                .listener(object: RequestListener<Drawable>{
-                    override fun onLoadFailed(
-                        e: GlideException?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        loading.gone()
-                        return false
+                Glide.with(photo)
+                    .load(item.photoUrl)
+                    .apply(requestOptions)
+                    .listener(object : RequestListener<Drawable> {
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            loading.gone()
+                            return false
+                        }
+
+                        override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            loading.gone()
+                            return false
+                        }
+
+                    })
+                    .into(photo)
+
+                root.setOnClickListener {
+                    val optionsCompat: ActivityOptionsCompat = if (location.isVisible) {
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            root.context as Activity,
+                            Pair(photo, "photo"),
+                            Pair(fullName, "fullName"),
+                            Pair(description, "description"),
+                            Pair(date, "date"),
+                            Pair(location, "location")
+                        )
+                    } else {
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            root.context as Activity,
+                            Pair(photo, "photo"),
+                            Pair(fullName, "fullName"),
+                            Pair(description, "description"),
+                            Pair(date, "date")
+                        )
                     }
-
-                    override fun onResourceReady(
-                        resource: Drawable?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        dataSource: DataSource?,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        loading.gone()
-                        return false
-                    }
-
-                })
-                .into(photo)
-
-            root.setOnClickListener {
-                val optionsCompat: ActivityOptionsCompat = if (location.isVisible) {
-                    ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        root.context as Activity,
-                        Pair(photo, "photo"),
-                        Pair(fullName, "fullName"),
-                        Pair(description, "description"),
-                        Pair(date, "date"),
-                        Pair(location, "location")
-                    )
-                } else {
-                    ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        root.context as Activity,
-                        Pair(photo, "photo"),
-                        Pair(fullName, "fullName"),
-                        Pair(description, "description"),
-                        Pair(date, "date")
-                    )
+                    listener.onClick(optionsCompat, item)
                 }
-                listener.onClick(optionsCompat, item)
+            } else {
+                holder.root.gone()
             }
         }
     }

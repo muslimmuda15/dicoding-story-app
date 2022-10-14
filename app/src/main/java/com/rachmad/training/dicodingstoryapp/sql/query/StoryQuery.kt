@@ -10,12 +10,12 @@ import com.rachmad.training.dicodingstoryapp.model.StoryData
 
 @Dao
 interface StoryQuery {
-    @Query("select * from story")
-    fun getListData(): PagingSource<Int, StoryData>
+    @Query("select * from story where account_id = :userId")
+    fun getListData(userId: String): PagingSource<Int, StoryData>
 
     @Insert(onConflict = REPLACE)
-    fun insertAllStory(stories: List<StoryData>)
+    suspend fun insertAllStory(stories: List<StoryData>)
 
     @Query("delete from story")
-    fun deleteAll()
+    suspend fun deleteAll()
 }
