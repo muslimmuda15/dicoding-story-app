@@ -73,16 +73,17 @@ class MainActivity: BaseActivity<ActivityMainBinding>(), OnSelectedStory {
 
     private fun requestNetwork(){
         viewModel.stories()?.let { stories ->
-            Timber.d("STORIES IS FOUND", stories)
             stories.removeObservers(this)
             stories.observe(this) {
-                it.map {
-                    Timber.d("STORIES DATA : " + it.toString())
-                }
                 storyAdapter.submitData(lifecycle, it)
             }
         } ?: run {
-            Timber.d("STORIES IS EMPTY")
+            /**
+             * Story is null because have no account data
+             * FORCE CLOSE !!!
+             */
+            isAuth = true
+            viewModel.logout()
         }
     }
 

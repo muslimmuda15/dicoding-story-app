@@ -6,15 +6,9 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.rachmad.training.dicodingstoryapp.App
-import com.rachmad.training.dicodingstoryapp.model.BaseResponseData
 import com.rachmad.training.dicodingstoryapp.model.RemoteKeys
 import com.rachmad.training.dicodingstoryapp.model.StoryData
-import com.rachmad.training.dicodingstoryapp.util.errorResponseData
 import com.rachmad.training.dicodingstoryapp.webservice.EndPoint
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import timber.log.Timber
 import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)

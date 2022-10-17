@@ -33,7 +33,6 @@ class StoryItemRecyclerViewAdapter(val context: Context, private val listener: O
     private var geoLocation: Geolocation = Geolocation(context)
     private var timeUtil: TimeUtil = TimeUtil(context)
 
-    private val values = ArrayList<StoryData>()
     private val requestOptions = RequestOptions()
         .diskCacheStrategy(DiskCacheStrategy.ALL)
         .dontTransform()
@@ -49,10 +48,8 @@ class StoryItemRecyclerViewAdapter(val context: Context, private val listener: O
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         with(holder) {
-            if(values.size > 0) {
+            getItem(position)?.let { item ->
                 holder.root.visible()
-                val item = values[position]
-
                 loading.visible()
                 val timeStamp = item.createdAt?.let { timeUtil.toDateLong(it) } ?: run { 0L }
 
@@ -122,13 +119,12 @@ class StoryItemRecyclerViewAdapter(val context: Context, private val listener: O
                     }
                     listener.onClick(optionsCompat, item)
                 }
-            } else {
+            } ?: run {
                 holder.root.gone()
             }
         }
     }
 
-    override fun getItemCount(): Int = values.size
 
     inner class StoryViewHolder(binding: FragmentStoryItemBinding): RecyclerView.ViewHolder(binding.root) {
         val root = binding.root
